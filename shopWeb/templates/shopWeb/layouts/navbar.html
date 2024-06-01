@@ -1,0 +1,137 @@
+<!-- NAVBAR-->
+<nav class="navbar navbar-expand-md bg-dark sticky-top border-bottom"
+    data-bs-theme="dark">
+    <div class="container justify-content-between">
+        <img src="static/img/logo/logo_color.png" alt width="30">
+        <a class="navbar-brand d-md-none" href="index.html">
+            <a class="navbar-brand" href="index.html">Gardenia Shop</a>
+        </a>
+        <button class="navbar-toggler" type="button"
+            data-bs-toggle="offcanvas" data-bs-target="#offcanvas"
+            aria-controls="offcanvas" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+        <div class="offcanvas offcanvas-end"
+            id="offcanvas" aria-labelledby="offcanvasLabel">
+
+            <div class="offcanvas-header justify-content-between">
+                <img src="static/img/logo/logo_outline_w.png"
+                    width="30px" alt
+                    style="margin-right: 15px;">
+                <h5 class="offcanvas-title" id="offcanvasLabel">Gardenia
+                    Shop</h5>
+                <button type="button" class="btn-close"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+
+                <ul
+                    class="navbar-nav flex-grow-1 justify-content-between">
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#"
+                            id="navbarDropdownMenuLink1" role="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Productos
+                        </a>
+
+                        <ul class="dropdown-menu  dropdown-large"
+                            aria-labelledby="navbarDropdownMenuLink1">
+                            <div class="row g-3 mb-3">
+                                <div
+                                    class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                                    <span
+                                        class="dropdown-header">
+                                        <a
+                                            href="templates/productos/herramientas/cat_herramientas.html">Herrameintas</a></span>
+                                    <a class="dropdown-item"
+                                        href="templates/productos/herramientas/tijeras.html">Tijeras</a>
+                                    <a class="dropdown-item "
+                                        href="templates/productos/">Palas</a>
+                                    <a class="dropdown-item "
+                                        href="templates/productos/herramientas/otras_herramientas.html">Otras
+                                        Herrameintas</a>
+
+                                </div>
+
+                                <div
+                                    class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                                    <span
+                                        class="dropdown-header">
+                                        <a
+                                            href="templates/productos/plantas_semillas/cat_plantas_semillas.html">Plantas
+                                            y Semillas</a></span>
+                                    <a class="dropdown-item "
+                                        href="templates/productos/plantas_semillas/flores.html">Flores</a>
+                                    <a class="dropdown-item "
+                                        href="templates/productos/plantas_semillas/plantas_arboles.html">Plantas
+                                        y Arboles</a>
+                                    <a class="dropdown-item "
+                                        href="templates/productos/plantas_semillas/huerto.html">Huerto</a>
+
+                                </div>
+                                <div
+                                    class="col-lg-4  col-md-6 col-sm-12 mb-3">
+                                    <span
+                                        class="dropdown-header">
+                                        <a
+                                            href="templates/productos/insumos/cat_insumos.html">Insumos</a></span>
+                                    <a class="dropdown-item "
+                                        href="templates/productos/insumos/tierra.html">
+                                        Tierra</a>
+                                    <a class="dropdown-item "
+                                        href="templates/productos/insumos/fertilizante.html">
+                                        Fertilizante</a>
+                                    <a class="dropdown-item "
+                                        href="templates/productos/insumos/otros_insumos.html">
+                                        Otros Insumos</a>
+
+                                </div>
+                                <li><hr class="dropdown-divider "></li>
+                                <li><a class="dropdown-item col-md-6"
+                                        href="templates/productos/all_products.html">
+                                        Todos los Productos</a></li>
+                            </div>
+
+                        </ul>
+                    </li>
+
+                    <form class="d-flex" role="search">
+                        <input class="form-control me-2" type="Buscar"
+                            placeholder="Buscar" aria-label="Buscar">
+                        <button class="btn btn-outline-success"
+                            type="submit"><i
+                                class="bi bi-search"></i></button>
+                    </form>
+                    <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="modal"
+                            data-bs-target="#modalSignin">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                width="30" height="30"
+                                fill="currentColor"
+                                class="bi bi-person-circle"
+                                viewBox="0 0 16 16">
+                                <path
+                                    d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                                <path fill-rule="evenodd"
+                                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                            </svg>
+                            Iniciar Sesión
+                        </button>
+                    </li>
+                    <button class="btn btn-outline-success"
+                        type="button"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#carrito-offcanvas"
+                        aria-controls="offcanvasCarrito">
+                        <i class="bi bi-cart"></i>
+                        <span id="carrito-icono">0</span></ul>
+                </button>
+
+            </div>
+        </div>
+    </div>
+</nav>
