@@ -8,14 +8,22 @@
     --color-light: #FFFFFF;
     --color-black: #000000;
 }
-/* 
+ 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+ 
 }
 
+
+.comfortaa-logo {
+  font-family: "Comfortaa", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}
+/*
 h1,
 h2,
 h3,
@@ -407,4 +415,3 @@ p {
     padding-top: 10px;
     padding-bottom: 10px;
 }
- */
