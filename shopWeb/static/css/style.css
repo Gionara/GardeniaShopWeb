@@ -10,7 +10,6 @@
     --color-black: #000000;
 }
 
-body{background-color: #32CD32;}
 .museomoderno-font {
     font-family: "MuseoModerno", sans-serif;
     font-optical-sizing: auto;
@@ -181,4 +180,25 @@ a:hover {
 .offcanvas-body {
     padding: 20px;
     overflow-y: auto;
+}
+
+
+
+.offcanvas.show .offcanvas-body .nav-item,
+.offcanvas.show .offcanvas-body #singin,
+.offcanvas.show .offcanvas-body form {
+    padding-left: 0;
+    margin-left: 0%;
+    align-items: start;
+    justify-content: start;
+    margin-bottom: 20px;
+}
+
+.offcanvas.show .carrito-button{
+    width: 100%;
+    justify-content: center;
+}
+
+body {
+    background-color: #32CD32;
 }
