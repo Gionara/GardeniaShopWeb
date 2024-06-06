@@ -68,6 +68,12 @@ a:hover {
     color: var(--color-primary);
 }
 
+/* Define la clase hidden para ocultar elementos */
+.hidden {
+    display: none;
+}
+
+
 /* NAVBAR STYLE */ 
 
 .dropdown-header {
@@ -221,7 +227,7 @@ footer{
     flex-shrink: 0 ;
     position: sticky ;
     bottom: 10%;
-    
+    background-color: var(--color-black);
 }
 
 /* Ocultar footer */

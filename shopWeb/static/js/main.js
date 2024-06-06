@@ -352,12 +352,7 @@ document.addEventListener("DOMContentLoaded", function () {
     cargarProductos(); // Cargar los productos al cargar el DOM
     cargarCarrito(); // Cargar el carrito desde localStorage al iniciar
 
-});
 
-
-// script.js
-
-document.addEventListener("DOMContentLoaded", function() {
     const offcanvas = document.getElementById("offcanvas");
     const footer = document.getElementById("footer");
 
