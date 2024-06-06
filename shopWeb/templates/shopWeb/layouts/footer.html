@@ -1,35 +1,47 @@
-5    <div class="row" style="padding: 3%;color: #f8f9fa;">
-        <div class="col-12 col-md">
-            <row>
-                <img src="static/img/logo/logo_color.png" alt
-                    width="80px"
-                    style="padding-right: 4px;">
-                <a class="navbar-brand d-md-none" href="index.html">
-                    <a class="navbar-brand" href="index.html">Gardenia
-                        Shop</a>
-                </a></row>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+<!-- FOOTER-->
+
+<footer id="footer"
+    class="bg-dark sticky-bottom align-items-baseline justify-content-between ">
+    <div class="row ">
+        <div class="col-lg-4  aling-items-center justify-content-center">
+            <div class="justify-content-center m-3 d-flex">
+                <img src=" {% static 'img/logo/logo_color.png' %}"
+                    alt="LOGO_COLOR"
+                    width="60px" height="60px"
+                    style="margin-right: 10px;">
+
+                <a class="navbar-brand m-1" href="#INDEX"> <h5>Gardenia
+                        Shop</h5>
+                </a> 
+            </div>
         </div>
-        <div class="col-6 col-md colored">
-            <ul class="list-unstyled text-small">
-                <li><a href="templates/sobre_nosotros.html"><h5
-                            class="titulo_blanco">Sobre
-                            nosotros</h5></a></li>
+        <div
+            class="col-lg-4 g-3 gy-1 d-flex align-items-center justify-content-center m-0 p-0 ">
+            <ul class="list-unstyled g-3 aling-items-center">
+                <a href="#SOBRE_NOSOTROS"><h6
+                        class="link_info">Sobre
+                        nosotros</h6></a>
             </ul>
-            <ul class="list-unstyled text-small">
-                <li><a href="templates/politicas.html"><h5
-                            class="titulo_blanco">Politicas de
-                            Privacidad</h5></a></li>
+            <ul class="list-unstyled g-3 ">
+                <a href="#POLITICAS"><h6
+                        class="link_info">Politicas de
+                        Privacidad</h6></a>
             </ul>
         </div>
-        <div class="col-6 col-md ">
+        <div
+            class="col-lg-4   d-flex justify-content-center align-items-center">
             <div
-                class="d-flex justify-content-center"><h5>Síguenos</h5></div>
-            <div class="d-flex justify-content-center">
-                <div> <a href="url facebook"><i
+                class="d-flex justify-content-center"><h5
+                    class="confortaa-font siguenos_rrss ">Síguenos</h5></div>
+            <div class="d-flex justify-content-center m-2 ">
+                <div> <a class="link_rrss" href="url facebook"><i
                             class="bi bi-facebook"></i></a> </div>
-                <div> <a href="url twitter"><i
+                <div> <a class="link_rrss" href="url twitter"><i
                             class="bi bi-twitter"></i></a> </div>
-                <div> <a href="url instagram"><i
+                <div> <a class="link_rrss" href="url instagram"><i
                             class="bi bi-instagram"></i></a></div>
             </div>
         </div>

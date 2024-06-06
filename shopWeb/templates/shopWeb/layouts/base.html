@@ -15,17 +15,18 @@
         <!-- NAVBAR-->
         {% include 'shopWeb/layouts/navbar.html' %}
 
+        <div class="content">
         <!-- CONTENIDO-->
         {% block content %}
         {% endblock %} 
-
-        <!-- Off-canvas Carrito 
-        {% include 'shopWeb/layouts/offcanvas_carrito.html' %}-->
-
-        <!-- FOOTER
-        {% include 'ShopWeb/layouts/footer.html' %}-->
-        <!-- MODALS
-        {% include 'shopWeb/layouts/modal_singin.html' %}-->
+        </div>
+       
+        <!-- FOOTER -->
+        {% include 'ShopWeb/layouts/footer.html' %}
+        <!-- MODALS -->
+        {% include 'shopWeb/layouts/modal_singin.html' %}
+        <!-- Off-canvas Carrito -->
+        {% include 'shopWeb/layouts/offcanvas_carrito.html' %}
 
         <!--SCRIPT IMPORT-->
         <script src="{% static 'js/main.js' %}"></script>

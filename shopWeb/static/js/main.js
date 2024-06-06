@@ -353,3 +353,19 @@ document.addEventListener("DOMContentLoaded", function () {
     cargarCarrito(); // Cargar el carrito desde localStorage al iniciar
 
 });
+
+
+// script.js
+
+document.addEventListener("DOMContentLoaded", function() {
+    const offcanvas = document.getElementById("offcanvas");
+    const footer = document.getElementById("footer");
+
+    offcanvas.addEventListener('show.bs.offcanvas', function () {
+        footer.classList.add("hidden");
+    });
+
+    offcanvas.addEventListener('hide.bs.offcanvas', function () {
+        footer.classList.remove("hidden");
+    });
+});

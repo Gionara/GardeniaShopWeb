@@ -10,6 +10,19 @@
     --color-black: #000000;
 }
 
+html,body {
+    height: 100vh;
+
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+.content {
+    flex: 1;
+}
+
 .museomoderno-font {
     font-family: "MuseoModerno", sans-serif;
     font-optical-sizing: auto;
@@ -54,6 +67,8 @@ a {
 a:hover {
     color: var(--color-primary);
 }
+
+/* NAVBAR STYLE */ 
 
 .dropdown-header {
     color: var(--color-light);
@@ -199,6 +214,52 @@ a:hover {
     justify-content: center;
 }
 
-body {
-    background-color: #32CD32;
+
+/*FOOTER STYLES*/ 
+
+footer{
+    flex-shrink: 0 ;
+    position: sticky ;
+    bottom: 10%;
+    
+}
+
+/* Ocultar footer */
+footer.hidden {
+    display: none;
+}
+
+
+.logo_footer{
+    color: var(--color-light);
+}
+.logo_footer:hover{
+    color: var(--color-primary)
+}
+
+.link_info{
+    font-family: "Comfortaa", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    color: var(--color-light);
+    margin-inline: 10px 10px;
+}
+.link_info:hover{
+    color: var(--color-primary);
+}
+
+.link_rrss{
+    color: var(--color-light);
+    margin: 10px;
+}
+.link_rrss:hover{
+    color: var(--color-tertiary);
+    margin: 10px;
+    width: 30px
+}
+.siguenos_rrss{
+    font-family:"Dancing Script", cursive;
+    font-size: 30px;
+    font-style: normal;
+    color: var(--color-light);
 }
