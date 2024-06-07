@@ -179,7 +179,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let productos = [];
 
     function cargarProductos() {
-        fetch('/js/productos.json')
+        fetch('static/js/productos.json')
             .then(response => response.json())
             .then(data => {
                 if (url.includes('templates/productos/herramientas/tijeras.html')) {

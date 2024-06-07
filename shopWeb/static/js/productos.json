@@ -1,0 +1,201 @@
+                {
+                    "herramientas":{
+                        "Tijeras":[
+                            {
+                                "nombre": "Tijeras podar asas grandes",
+                                "precio": 10990,
+                                "imagen": "../../../static/img/productos/tijera_1.png",
+                                "Descripción": "Es ideal para dar formar, realizar cortes complejos y recortes repetitivos a través de sus cuchillas de precisión que cortan hasta la punta y que fomentan el crecimiento saludable en plantas y flores."
+                            },
+                            {
+                                "nombre": "Tijeras podar con mango rotatorio",
+                                "precio": 14990,
+                                "imagen": "../../../static/img/productos/tijera_2.png",
+                                "Descripción": "Ideal para personas que realizan podas a gran escala, así como para quienes padecen artritis, reumatismo y síndrome del túnel carpiano."
+                            },
+                            {
+                                "nombre": "Tijera de podar hojas curva micro-tip",
+                                "precio": 9990,
+                                "imagen": "../../../static/img/productos/tijera_3.png",
+                                "Descripción": "Las Cuchillas Curvas de las Tijeras de Podar Micro-Tip® mejoran el alcance y la precisión de corte con sus cuchillas que cortan hasta la punta en espacios reducidos y fomentan el crecimiento saludable en las plantas. Cuchillas de Acero Inoxidable endurecidas y un borde afilado de precisión se mantiene afilada, incluso a través de un uso intensivo."
+                            },
+                            {
+                                "nombre": "Tijera de podar de una mano corte bypass",
+                                "precio": 19990,
+                                "imagen": "../../../static/img/productos/tijera_4.png",
+                                "Descripción": "Eleva tus tareas de jardinería a un nivel superior con nuestras tijeras de podar Fiskars, diseñadas meticulosamente. Perfectas para el corte de tallos y ramas ligeras, estas tijeras no solo hacen que el trabajo sea más fácil, sino que también destacan por sus características innovadoras."
+                            }
+                        ],
+                        "palas":[
+                            {                
+                                "nombre": "Pala Trasplantadora Manual para Jardin 200S",
+                                "precio": 7990,
+                                "imagen": "../../../static/img/productos/pala_1.jpg",
+                                "Descripción": "Desarraigue y reubique las plantas, temporada tras temporada con el resistente trasplantador 200S. Cuenta con una cabeza de acero que no se romperá ni aflojará cuando esté cavando en un suelo duro. "
+                            },
+                            {                
+                                "nombre": "Pala Jardinería Fiskars Pequeña Tipo Cuchara 100S",
+                                "precio": 6990,
+                                "imagen": "../../../static/img/productos/pala_2.jpg",
+                                "Descripción": "Pala Jardinería Fiskars Pequeña Tipo Cuchara 100S La Cuchara de tierra pequeña FiberComp 100S tiene un diseño tipo cuchara que es perfecta para excavar o transportar tierra.Características: • El diseño FiberComp® a prueba de óxido, es fibra resistente lo que permite que la herramienta sea solo una pieza y así no se afloja, no se dobla ni se rompe."
+                            },
+                            {                
+                                "nombre": "Pala Punta Mango Madera 120cm Tramontina.",
+                                "precio": 21990,
+                                "imagen": "../../../static/img/productos/pala_3.jpg",
+                                "Descripción": "La pala se fabrica en acero al carbono especial de alta calidad, y se corta con láser. Es templada en todo el cuerpo de la pieza, proporcionando más resistencia y menos desgaste durante el uso."
+                             },
+                            {                
+                                "nombre": "Pala Manual Trasplantadora De Jardín Tmk19926",
+                                "precio": 5990,
+                                "imagen": "../../../static/img/productos/pala_4.png",
+                                "Descripción": "Herramienta manual para trasplantar plantas, fabricado con materiales de alta calidad, ideal para trabajos de jardín en el hogar.• Esta es una pala práctica que ofrece una multiplicidad de usos y por las cualidades de sus materiales tiene una vida útil muy extensa."}
+                        ],
+                        "otras_herramientas":[
+                            {                
+                                "nombre": "Kit Set De Herramientas Jardineria 3pzs Tramontina",
+                                "precio": 8390,
+                                "imagen": "../../../static/img/productos/oherramienta_1.jpg",
+                                "Descripción": "Kit Set De Herramientas Jardineria 3pzs Tramontina"
+                            },
+                            {                
+                                "nombre": "guantes Para Jardinería Con Garras Trabajo Jardín",
+                                "precio": 29990,
+                                "imagen": "../../../static/img/productos/oherramienta_2.jpg",
+                            "Descripción": "Par de guantes para jardinería. Incluye 4 garras de plástico en el guante derecho. Son lavables y de escelente adherencia.Este práctico par de guantes sirve para ayudar a sus manos en las tareas de jardinería, ya que son resistentes, con excelente adherencia a herramientas y elementos presentes en el jardín. "
+                            },
+                            {                
+                                "nombre": "Set 11 Piezas Herramientas Jardinería Huerto Plantas Jardin",
+                                "precio": 18990,
+                                "imagen": "../../../static/img/productos/oherramienta_3.jpg",
+                                "Descripción": "uego de jardinería de 11 piezas: este juego esencial de jardinería todo en uno incluye una paleta grande, paleta pequeña, rastrillo de mano, cultivador, deshierbadora, tijeras de podar, cuerda de jardinería de 100 pies, rociador de mano, guantes de jardinería de garra de excavación, tijeras de podar y una bolsa de tela Oxford para mantener todas tus herramientas llenas y organizadas para que puedas podar, cavar, deshierbar, airear y plantar a la perfección."
+                            },
+                            {                
+                                "nombre": "Kit Mini Herramientas Plantas Jardinería Suculentas 15piezas                                ",
+                                "precio": 9990,
+                                "imagen": "../../../static/img/productos/oherramienta_4.jpg",
+                                "Descripción": "Mini Kit de herramientas manuales de jardinería para todas las necesidades de sus suculentas o plantas de menor tamaño, como excavación, deshierbe, aflojamiento del suelo, aireación y trasplante.Materiales de alta calidad, hecho de acero inoxidable y plástico de alta calidad, el juego de herramientas para mini plantas es liviano, resistente, duradero y no se deforma fácilmente"}
+                        ]
+                    },
+                    "insumos":{
+                        "fertilizante":[
+                            {
+                                "nombre": "Fertilizante Germinal Abono Completo 1kg Anasac",
+                                "precio": 6790,
+                                "imagen": "../../../static/img/productos/fertilizante_1.jpg",
+                                "Descripción": "Fertilizante Germinal Abono Completo 1kg - Anasac El Fertilizante Germinal es granulado, balanceado y completo, contiene los elementos necesarios para un buen desarrollo vegetativo Además de macroelementos (N, P, K), aporta un conjunto de microelementos, fundamentales, para los procesos de crecimiento, desarrollo, floración y sanidad de las especies vegetales"
+                            },
+                            {
+                                "nombre": "Fertilizante Cítricos 1kg Anasac",
+                                "precio": 4990,
+                                "imagen": "../../../static/img/productos/fertilizante_2.jpg",
+                                "Descripción": "Fertilizante Cítricos 1kg - Anasac El Fertilizante para Cítricos es granulado, formulado para cítricos, con alto contenido de nitrógeno y potasio, los elementos más demandados por la fruta Ideal para fertilizar Limoneros, Naranjos, Pomelos y Mandarinos, entre otros"
+                            },
+                            {
+                                "nombre": "Fertilizante Floración 1kg Anasac",
+                                "precio": 8990,
+                                "imagen": "../../../static/img/productos/fertilizante_3.jpg",
+                                "Descripción": "Fertilizante Floración 1kg Anasa"
+                            },
+                            {
+                                "nombre": "Anasac Bio Fertilizante Huerto 500ml",
+                                "precio": 6940,
+                                "imagen": "../../../static/img/productos/fertilizante_4.jpg",
+                                "Descripción": "Bio Fertilizante Huerto 500ml - Anasac 100% natural Su formulación “Listo para Usar” no necesita dilución y se aplica vía foliar. Producto de rápida absorción y asimilación en las plantas, fomenta la floración y la producción en hortalizas, estimula el crecimiento en todas las etapas de desarrollo de la planta Intensifica el tamaño y aroma de las hortalizas, además de mejorar la resistencia al frío, a la sequía y el ataque de enfermedades y plagas en su huerto"
+                            }
+                        ],
+                        "tierra":[
+                            {                
+                                "nombre": "TIERRA DE HOJA",
+                                "precio": 8990,
+                                "imagen": "../../../static/img/productos/tierra_1.jpg",
+                                "Descripción": "Sustrato natural desarrollado a partir de la compostación de hojas y residuos vegetales, que mejora las condiciones de los suelos, tanto para el desarrollo de prados como el  de otras plantas.  Favorece la germinación y crecimiento del césped."
+                            },
+                            {                
+                                "nombre": "TIERRA REFORZADA JARDITEC",
+                                "precio": 19990,
+                                "imagen": "../../../static/img/productos/tierra_2.jpg",
+                            "Descripción": "Sustrato cuidadosamente harneado, libre de insectos y malezas. Mejora la estructura del suelo, favoreciendo el drenaje. Su alto contenido de materia orgánica y nutrientes, estimula el crecimiento óptimo de sus plantas. Lista para ser usadas en maceteros, jardineras, almácigos, plantas de interior y jardín, siembra de prados y trasplantes."
+                            }
+                            
+                        ],
+                        "otros_insumos":[
+                            {                
+                                "nombre": "BAZOOKA PLUS 250 CC",
+                                "precio": 19990,
+                                "imagen": "../../../static/img/productos/oinsumos_1.png",
+                                "Descripción": "Bazooka Plus®️ es un nuevo herbicida no selectivo post emergente, que actúa principalmente por contacto."
+                            },
+                            {                
+                                "nombre": "INSECTICIDA ARAÑAS LISTO PARA USAR",
+                                "precio": 9990,
+                                "imagen": "../../../static/img/productos/oinsumos_2.jpg",
+                            "Descripción": "Insecticida líquido listo para usar para controlar arañas en interiores y exteriores. no requiere dilución y es de baja toxicidad."
+                            },
+                            {                
+                                "nombre": "INSECTICIDA CONTRA ACAROS EN AEROSOL",
+                                "precio": 12990,
+                                "imagen": "../../../static/img/productos/oinsumos_3.jpg",
+                                "Descripción": "Es un poderoso producto de acción instantánea en formato aerosol controla todo tipo de ácaros"
+                            },
+                            {                
+                                "nombre": "BRILLO LPU",
+                                "precio": 7990,
+                                "imagen": "../../../static/img/productos/oinsumos_4.jpg",
+                                "Descripción": "El Abrillantador de Hojas Anasac ha sido desarrollado en base a siliconas y aceites que les entregan brillo y protección a las plantas de interior de hojas lisas y duras. Proporciona brillo a las hojas de las plantas. Elimina manchas de agua y polvo de las hojas."}
+                        ]
+                    },
+                    "plantas_semillas":{
+                        "flores":[
+                            {
+                                "nombre": "Semilla Flores Mezcla Perenne ",
+                                "precio": 1990,
+                                "imagen": "../../../static/img/productos/flores_1.jpg",
+                                "Descripción": "Las Flores Silvestres son una alternativa natural para agregar color y belleza a su jardín."
+                            },
+                            {
+                                "nombre": "Semilla Flores Mezcla Rusticca ",
+                                "precio": 1990,
+                                "imagen": "../../../static/img/productos/flores_2.jpg",
+                                "Descripción": ""
+                            }
+
+                        ],
+                        "plantas_arboles":[
+                            {                
+                                "nombre": "Ficus Benjamino Mediano",
+                                "precio": 29990,
+                                "imagen": "../../../static/img/productos/planta_1.jpg",
+                                "Descripción": "Planta de Interior, foto sólo referencial.El Ficus Benjamina, también conocido como ficus tejedor o árbol de caucho tejedor, es una planta de interior popular"
+                            },
+                            {                
+                                "nombre": "Arbol de naranjo tronco trenzado",
+                                "precio": 19990,
+                                "imagen": "../../../static/img/productos/planta_2.jpg",
+                            "Descripción": "Arbol de naranjo tronco trenzado 190 cm"
+                            }
+                            
+                        ],
+                        "huerto":[
+                            {                
+                                "nombre": "Semilla Zapallo Italiano",
+                                "precio": 990,
+                                "imagen": "../../../static/img/productos/huerto_1.jpg",
+                                "Descripción": "Semilla Zapallo Italiano 5gr"
+                            },
+                            {                
+                                "nombre": "Semilla Pimenton Rojo",
+                                "precio": 1290,
+                                "imagen": "../../../static/img/productos/huerto_2.jpg",
+                                "Descripción": "Semilla Pimenton Rojo 5gr"
+                            },
+                            {                
+                                "nombre": "Semilla Acelga",
+                                "precio": 19990,
+                                "imagen": "../../../static/img/productos/huerto_3.jpg",
+                                "Descripción": "Semilla Acelga 5gr"
+                            }              
+
+                         ]
+                    }
+                }

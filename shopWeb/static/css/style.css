@@ -1,6 +1,7 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Dancing+Script:wght@700&family=MuseoModerno:ital,wght@1,800&display=swap');
 
+
 :root {
     --color-primary: #FFA500;
     --color-secondary: #FFD700;
@@ -175,7 +176,7 @@ a:hover {
 }
 
 .btn-outline-success:hover {
-    background-color: var(--color-primary);
+    background-color: var(-0-color-primary);
     color: var(--color-light);
 }
 
@@ -268,4 +269,88 @@ footer.hidden {
     font-size: 30px;
     font-style: normal;
     color: var(--color-light);
+}
+
+/* POLITICAS-PAGE STYLE */
+.politicas-page{
+    main {
+        position: relative;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        overflow: hidden; /* Esto asegura que no haya scrolls inesperados */
+    }
+    
+    main::before {
+        content: "";
+        position: fixed; /* Fija la imagen al fondo */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('../img/logo/logo_line.png'); 
+        background-size:contain;
+        background-repeat: no-repeat; 
+        background-position: center; 
+        opacity: 0.2; 
+        z-index: -1; 
+    }
+
+    .b-example-divider {
+        padding: 1rem 0;
+    }
+    
+    .container {
+        max-width: 960px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1; 
+    }
+    
+    .text-center {
+        text-align: center;
+    }
+}
+
+
+/* SOBRE-NOSOTROS-PAGE STYLE*/
+
+.sobre-nosotro-page{
+    main {
+        position: relative;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        overflow: hidden; 
+    }
+    
+    main::before {
+        content: "";
+        position: fixed; 
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('../img/logo/logo_line.png'); 
+        background-size:contain; 
+        background-repeat: no-repeat; 
+        background-position: center;
+        opacity: 0.2;
+        z-index: -1; 
+    }
+
+    .b-example-divider {
+        padding: 1rem 0;
+    }
+    
+    .container {
+        max-width: 960px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1; /* Asegura que el contenido esté por encima de la imagen de fondo */
+    }
+    
+    .text-center {
+        text-align: center;
+    }
+
 }
