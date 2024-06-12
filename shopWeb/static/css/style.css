@@ -354,3 +354,13 @@ footer.hidden {
     }
 
 }
+
+/* INDEX STYLE */
+.index-page{
+    .carousel-indicators .rounded-circle {
+        width: 12px;
+        height: 12px;
+        border-radius: 1000%;
+        background-color: var(--color-dark); /* Cambia esto según el color que desees */
+    }
+}
