@@ -1,10 +1,13 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+ 
  <!-- MODALS-->
  <div class="modal fade" id="modalSignin" tabindex="-1"
  aria-labelledby="modalSigninLabel" aria-hidden="true">
  <div class="modal-dialog">
      <div class="modal-content">
          <div class="modal-header bg-dark">
-             <img src="static/img/logo/logo_outline_w.png" alt
+             <img src="{% static 'img/logo/logo_outline_w.png' %}" alt
                  width="50px"
                  style="padding-right: 4px;">
              <h5 class="modal-title" Style="color: var(--color-light)"
@@ -68,7 +71,7 @@
              </form>
          </div>
          <div class="modal-footer">
-             <a class="btn btn-success" href="templates/register.html"
+             <a class="btn btn-success" href="#REGISTER"
                  role="button">Registrarse</a>
              <button type="button" class="btn btn-secondary"
                  data-bs-dismiss="modal">Cerrar</button>

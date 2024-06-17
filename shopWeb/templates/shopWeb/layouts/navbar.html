@@ -6,7 +6,7 @@
     <div class="container-fluid d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-start">
             <img src=" {% static 'img/logo/logo_color.png' %}" alt="logo color" width="40" class="me-2 mt-2">
-            <a class="navbar-brand dancing-script-font" href="#INDEX">
+            <a class="navbar-brand dancing-script-font" href="{% url 'shopWeb:index' %}">
                 <h5>Gardenia Shop</h5>
             </a>
         </div>
@@ -32,30 +32,30 @@
                             <div class="row g-2  mb-3">
                                 <div class="col-lg-4 col-md-12  mb-3">
                                     <span class="dropdown-header">
-                                        <a href="#CAT_HERRAMIENTAS">Herramientas</a>
+                                        <a href="{% url 'shopWeb:cat_herramientas' %}">Herramientas</a>
                                     </span>
-                                    <a class="dropdown-item" href="#TIJERAS">Tijeras</a>
-                                    <a class="dropdown-item" href="#PALAS">Palas</a>
-                                    <a class="dropdown-item" href="#OTRAS_HERRAMIENTAS">Otras Herramientas</a>
+                                    <a class="dropdown-item" href="{% url 'shopWeb:tijeras' %}">Tijeras</a>
+                                    <a class="dropdown-item" href="{% url 'shopWeb:palas' %}">Palas</a>
+                                    <a class="dropdown-item" href="{% url 'shopWeb:otras_herramientas' %}">Otras Herramientas</a>
                                 </div>
                                 <div class="col-lg-4 col-md-12 mb-3">
                                     <span class="dropdown-header">
-                                        <a href="#CAT_PLANTAS_SEMIILAS">Plantas y Semillas</a>
+                                        <a href="{% url 'shopWeb:cat_plantas' %}">Plantas y Semillas</a>
                                     </span>
-                                    <a class="dropdown-item" href="#FLORES">Flores</a>
-                                    <a class="dropdown-item" href="#PLANTAS_ARBOLES">Plantas y Árboles</a>
-                                    <a class="dropdown-item" href="#HUERTO">Huerto</a>
+                                    <a class="dropdown-item" href="{% url 'shopWeb:flores' %}">Flores</a>
+                                    <a class="dropdown-item" href="{% url 'shopWeb:plantas_arboles' %}">Plantas y Árboles</a>
+                                    <a class="dropdown-item" href="{% url 'shopWeb:huerto' %}">Huerto</a>
                                 </div>
                                 <div class="col-lg-4 col-md-12 mb-3">
                                     <span class="dropdown-header">
-                                        <a href="#CAT_INSUMOS">Insumos</a>
+                                        <a href="{% url 'shopWeb:cat_insumos' %}">Insumos</a>
                                     </span>
-                                    <a class="dropdown-item" href="#TIERRA">Tierra</a>
-                                    <a class="dropdown-item" href="#FERTILIZANTES">Fertilizantes</a>
-                                    <a class="dropdown-item" href="#OTROS_INSUMOS">Otros Insumos</a>
+                                    <a class="dropdown-item" href="{% url 'shopWeb:tierra' %}">Tierra</a>
+                                    <a class="dropdown-item" href="{% url 'shopWeb:fertilizantes' %}">Fertilizantes</a>
+                                    <a class="dropdown-item" href="{% url 'shopWeb:otros_insumos' %}">Otros Insumos</a>
                                 </div>
                                 <li><hr class="dropdown-divider bg-light"></li>
-                                <li><a class="dropdown-item col-md-6" href="#ALL_PRODUCTS">Todos los Productos</a></li>
+                                <li><a class="dropdown-item col-md-6" href="{% url 'shopWeb:all_products' %}">Todos los Productos</a></li>
                             </div>
                         </ul>
                     </li>

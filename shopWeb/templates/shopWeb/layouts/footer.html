@@ -13,7 +13,7 @@
                     width="60px" height="60px"
                     style="margin-right: 10px;">
 
-                <a class="navbar-brand m-1" href="#INDEX"> <h5>Gardenia
+                <a class="navbar-brand m-1" href="{% url 'shopWeb:index' %}"> <h5>Gardenia
                         Shop</h5>
                 </a> 
             </div>
@@ -21,12 +21,14 @@
         <div
             class="col-lg-4 g-3 gy-1 d-flex align-items-center justify-content-center m-0 p-0 ">
             <ul class="list-unstyled g-3 aling-items-center">
-                <a href="#SOBRE_NOSOTROS"><h6
+                <a href="{% url 'shopWeb:sobre_nosotros' %}" >
+                    <h6
                         class="link_info">Sobre
                         nosotros</h6></a>
             </ul>
             <ul class="list-unstyled g-3 ">
-                <a href="#POLITICAS"><h6
+                <a href="{% url 'shopWeb:politicas' %}">
+                    <h6
                         class="link_info">Politicas de
                         Privacidad</h6></a>
             </ul>

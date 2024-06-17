@@ -11,7 +11,8 @@
     --color-black: #000000;
 }
 
-html,body {
+html,
+body {
     height: 100vh;
 
 }
@@ -20,6 +21,7 @@ body {
     display: flex;
     flex-direction: column;
 }
+
 .content {
     flex: 1;
 }
@@ -75,7 +77,7 @@ a:hover {
 }
 
 
-/* NAVBAR STYLE */ 
+/* NAVBAR STYLE */
 
 .dropdown-header {
     color: var(--color-light);
@@ -84,10 +86,12 @@ a:hover {
     font-weight: bold;
     width: 100%;
 }
-.dropdown-header:hover{
+
+.dropdown-header:hover {
     color: var(--color-dark);
     background-color: var(--color-secondary);
-    a{
+
+    a {
         color: var(--color-dark);
         font-weight: bold;
     }
@@ -106,7 +110,8 @@ a:hover {
 
 .nav-link {
     font-family: "Comfortaa", sans-serif;
-    font-size: 18px; /* Updated font size */
+    font-size: 18px;
+    /* Updated font size */
     font-weight: bold;
     color: var(--color-light);
     padding: 10px 15px;
@@ -121,7 +126,8 @@ a:hover {
 #navbarDropdownMenuLink1 {
     color: var(--color-light);
     font-family: "Comfortaa", sans-serif;
-    font-size: 18px; /* Updated font size */
+    font-size: 18px;
+    /* Updated font size */
     font-weight: bold;
     padding: 10px 15px;
 }
@@ -164,7 +170,7 @@ a:hover {
 .form-control {
     border-radius: 25px;
     font-family: "Comfortaa", sans-serif;
-   
+
 }
 
 .btn-outline-success {
@@ -216,17 +222,17 @@ a:hover {
     margin-bottom: 20px;
 }
 
-.offcanvas.show .carrito-button{
+.offcanvas.show .carrito-button {
     width: 100%;
     justify-content: center;
 }
 
 
-/*FOOTER STYLES*/ 
+/*FOOTER STYLES*/
 
-footer{
-    flex-shrink: 0 ;
-    position: sticky ;
+footer {
+    flex-shrink: 0;
+    position: sticky;
     bottom: 10%;
     background-color: var(--color-black);
 }
@@ -237,130 +243,204 @@ footer.hidden {
 }
 
 
-.logo_footer{
+.logo_footer {
     color: var(--color-light);
 }
-.logo_footer:hover{
+
+.logo_footer:hover {
     color: var(--color-primary)
 }
 
-.link_info{
+.link_info {
     font-family: "Comfortaa", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
     color: var(--color-light);
     margin-inline: 10px 10px;
 }
-.link_info:hover{
+
+.link_info:hover {
     color: var(--color-primary);
 }
 
-.link_rrss{
+.link_rrss {
     color: var(--color-light);
     margin: 10px;
 }
-.link_rrss:hover{
+
+.link_rrss:hover {
     color: var(--color-tertiary);
     margin: 10px;
     width: 30px
 }
-.siguenos_rrss{
-    font-family:"Dancing Script", cursive;
+
+.siguenos_rrss {
+    font-family: "Dancing Script", cursive;
     font-size: 30px;
     font-style: normal;
     color: var(--color-light);
 }
 
 /* POLITICAS-PAGE STYLE */
-.politicas-page{
-    main {
-        position: relative;
-        margin: 0;
-        padding: 0;
-        font-family: Arial, sans-serif;
-        overflow: hidden; /* Esto asegura que no haya scrolls inesperados */
-    }
-    
-    main::before {
-        content: "";
-        position: fixed; /* Fija la imagen al fondo */
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image: url('../img/logo/logo_line.png'); 
-        background-size:contain;
-        background-repeat: no-repeat; 
-        background-position: center; 
-        opacity: 0.2; 
-        z-index: -1; 
-    }
-
-    .b-example-divider {
-        padding: 1rem 0;
-    }
-    
-    .container {
-        max-width: 960px;
-        margin: 0 auto;
-        position: relative;
-        z-index: 1; 
-    }
-    
-    .text-center {
-        text-align: center;
-    }
+.politicas-page main {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    /* Esto asegura que no haya scrolls inesperados */
 }
+
+.politicas-page main::before {
+    content: "";
+    position: fixed;
+    /* Fija la imagen al fondo */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../img/logo/logo_line.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.2;
+    z-index: -1;
+}
+
+.politicas-page .b-example-divider {
+    padding: 1rem 0;
+}
+
+.politicas-page .container {
+    max-width: 960px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.politicas-page .text-center {
+    text-align: center;
+}
+
+.politicas-page h2 {
+    font-family: "Dancing Script", sans-serif;
+    font-size: 45 px;
+    font-weight: bolder;
+    color: var(--color-dark);
+
+}
+
+.politicas-page h4 {
+    font-family: "Comfortaa", sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+    color: var(--color-dark);
+
+}
+
+.politicas-page p,
+ul,
+li {
+    font-family: "Comfortaa", sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--color-dark);
+
+}
+
 
 
 /* SOBRE-NOSOTROS-PAGE STYLE*/
 
-.sobre-nosotro-page{
-    main {
-        position: relative;
-        margin: 0;
-        padding: 0;
-        font-family: Arial, sans-serif;
-        overflow: hidden; 
-    }
-    
-    main::before {
-        content: "";
-        position: fixed; 
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image: url('../img/logo/logo_line.png'); 
-        background-size:contain; 
-        background-repeat: no-repeat; 
-        background-position: center;
-        opacity: 0.2;
-        z-index: -1; 
-    }
 
-    .b-example-divider {
-        padding: 1rem 0;
-    }
+.sobre-nosotros-page main {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    font-family: "Comfortaa", sans-serif;
+    overflow: hidden;
     
-    .container {
-        max-width: 960px;
-        margin: 0 auto;
-        position: relative;
-        z-index: 1; /* Asegura que el contenido esté por encima de la imagen de fondo */
-    }
-    
-    .text-center {
-        text-align: center;
-    }
+}
+
+.sobre-nosotros-page main::before {
+    content: "";
+    position: fixed;
+    /* Fija la imagen al fondo */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../img/logo/logo_line.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.2;
+    z-index: -1;
+}
+
+
+.sobre-nosotros-page .b-example-divider {
+    padding: 1rem 0;
+}
+
+.sobre-nosotros-page .container {
+    max-width: 960px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    /* Asegura que el contenido esté por encima de la imagen de fondo */
+}
+
+
+.sobre-nosotros-page h1 {
+    font-family: "Dancing Script", sans-serif;
+    font-size: 50px;
+    font-weight: bolder;
+    color: var(--color-dark);
+    text-align: center;
 
 }
 
+.sobre-nosotros-page h2 {
+    font-family: "Dancing Script", sans-serif;
+    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+    color: var(--color-dark);
+
+}
+.sobre-nosotros-page h3 {
+    font-family: "Comfortaa", sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    color: var(--color-dark);
+
+}
+
+.sobre-nosotros-page p {
+    font-family: "Comfortaa", sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: justify;
+    color: var(--color-dark);
+}
+
+.sobre-nosotros-page h4 {
+    font-family: "Dancing Script", sans-serif;
+    font-size: 30px;
+    font-weight: bolder;
+    text-align: center;
+    color: var(--color-dark);
+}
+
 /* INDEX STYLE */
-.index-page{
+.index-page {
     .carousel-indicators .rounded-circle {
         width: 12px;
         height: 12px;
         border-radius: 1000%;
-        background-color: var(--color-dark); /* Cambia esto según el color que desees */
+        background-color: var(--color-dark);
+        /* Cambia esto según el color que desees */
     }
 }
