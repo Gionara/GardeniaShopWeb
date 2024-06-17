@@ -24,16 +24,16 @@ def all_products(request):
 
 #CATEGORIA HERRAMIENTAS
 def cat_herramientas(request):
-    return render(request, 'shopWeb/productos/cat_herramietas/cat_herramientas.html')
+    return render(request, 'shopWeb/productos/cat_herramientas/cat_herramientas.html')
 
 def palas(request):
-    return render(request, 'shopWeb/productos/cat_herramietas/palas.html')
+    return render(request, 'shopWeb/productos/cat_herramientas/palas.html')
 
 def tijeras(request):
-    return render(request, 'shopWeb/productos/cat_herramietas/tijeras.html')
+    return render(request, 'shopWeb/productos/cat_herramientas/tijeras.html')
 
 def otras_herramientas(request):
-    return render(request, 'shopWeb/productos/cat_herramietas/otras_herramientas.html')
+    return render(request, 'shopWeb/productos/cat_herramientas/otras_herramientas.html')
 
 #CATEGORIA PLANTAS Y SEMILLAS
 
