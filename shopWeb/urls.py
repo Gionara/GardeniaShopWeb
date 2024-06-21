@@ -7,6 +7,11 @@ app_name='shopWeb'
 
 urlpatterns = [
     path('index', views.index, name='index'),
+    path('register', views.register, name='register'),
+
+    path('login/', views.login_view, name='login'),  
+    path('logout/', views.logout_view, name='logout'),  
+
     path('politicas',views.politicas, name='politicas'),
     path('sobre_nosotros',views.sobre_nosotros, name='sobre_nosotros'),
     path('all_products',views.all_products, name='all_products'),
