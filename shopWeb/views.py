@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
@@ -66,6 +68,28 @@ def politicas(request):
 
 def sobre_nosotros(request):
     return render(request,'shopWeb/info/sobre_nosotros.html')
+
+#PERFIL 
+
+@login_required
+def profile(request):
+    user = request.user
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Mantiene al usuario logueado después del cambio de contraseña
+            return JsonResponse({'error': False, 'message': '¡Tu contraseña ha sido actualizada correctamente!'})
+        else:
+            errors = {}
+            for field in form.errors:
+                errors[field] = form.errors[field][0]
+            return JsonResponse({'error': True, 'errors': errors})
+    else:
+        form = PasswordChangeForm(request.user)
+
+    return render(request, 'shopWeb/perfil/profile.html', {'user': user, 'form': form})
+
 
 
 #PRODUCTOS

@@ -1,0 +1,134 @@
+{% extends 'shopWeb/layouts/base.html' %}
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+{% block title %} 🌸Gardenia - Perfil 🌸 {% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Perfil de Usuario</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Datos Personales</h4>
+            <ul class="list-group">
+                <li class="list-group-item"><strong>Nombre:</strong> {{ user.first_name }}</li>
+                <li class="list-group-item"><strong>Apellido:</strong> {{ user.last_name }}</li>
+                <li class="list-group-item"><strong>Correo Electrónico:</strong> {{ user.email }}</li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h4>Cambiar Contraseña</h4>
+            <form id="password_change_form" method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="id_old_password">Contraseña Actual</label>
+                    <input type="password" name="old_password" id="id_old_password" autocomplete="current-password" required>
+                    <small class="text-danger" id="old_password_error"></small>
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_new_password1">Nueva Contraseña</label>
+                    <input type="password" name="new_password1" id="id_new_password1" autocomplete="new-password" required aria-describedby="id_new_password1_helptext">
+                    <small class="text-danger" id="new_password1_error"></small>
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_new_password2">Confirmar Nueva Contraseña</label>
+                    <input type="password" name="new_password2" id="id_new_password2" autocomplete="new-password" required aria-invalid="true">
+                    <small class="text-danger" id="new_password2_error"></small>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Actualizar Contraseña</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('#password_change_form').submit(function(event) {
+        event.preventDefault();
+
+        let oldPassword = $('#id_old_password').val();
+        let newPassword1 = $('#id_new_password1').val();
+        let newPassword2 = $('#id_new_password2').val();
+        let csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
+
+        let isValid = true;
+
+        // Reset error messages
+        $('#old_password_error').text('');
+        $('#new_password1_error').text('');
+        $('#new_password2_error').text('');
+
+        // Check if old password is not empty
+        if (oldPassword === '') {
+            $('#old_password_error').text('Este campo es requerido.');
+            isValid = false;
+        }
+        
+
+
+        // Check if new passwords match
+        if (newPassword1 !== newPassword2) {
+            $('#new_password2_error').text('Las contraseñas no coinciden.');
+            isValid = false;
+        }
+
+        // Add more password validation if needed (length, complexity, etc.)
+        if (newPassword1.length < 6) {
+            $('#new_password1_error').text('La nueva contraseña debe tener al menos 6 caracteres.');
+            isValid = false;
+        } else if (!validatePassword(newPassword1)) {
+            $('#new_password1_error').text('La nueva contraseña debe tener al menos una letra mayúscula, una letra minúscula y un número.');
+            isValid = false;
+        } else {
+            $('#new_password1_error').text('');
+        }
+
+        if (!isValid) {
+            return;
+        }
+
+        function validatePassword(password) {
+            var uppercaseRegex = /[A-Z]/;
+            var numberRegex = /[0-9]/;
+            return uppercaseRegex.test(password) && numberRegex.test(password);
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '{% url "shopWeb:profile" %}',
+            data: {
+                old_password: oldPassword,
+                new_password1: newPassword1,
+                new_password2: newPassword2,
+                csrfmiddlewaretoken: csrfToken,
+            },
+            success: function(response) {
+                if (response.error) {
+                    for (let field in response.errors) {
+                        if (field === 'old_password') {
+                            $('#old_password_error').text(response.errors[field]);
+                        } else if (field === 'new_password1') {
+                            $('#new_password1_error').text(response.errors[field]);
+                        } else if (field === 'new_password2') {
+                            $('#new_password2_error').text(response.errors[field]);
+                        }
+                    }
+                } else {
+                    alert('¡Tu contraseña ha sido actualizada correctamente!');
+                    window.location.href = '{% url "shopWeb:profile" %}';
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('Ha ocurrido un error, por favor intente de nuevo.');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
