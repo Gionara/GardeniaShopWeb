@@ -1,11 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth.decorators import login_required
-
+from django.contrib.auth.decorators import login_required,user_passes_test
+from .models import Producto, Categoria, SubCategoria
+from .forms import ProductoForm
 
 # Create your views here.
 
@@ -138,3 +139,73 @@ def otros_insumos(request):
 def tierra(request):
     return render(request, 'shopWeb/productos/cat_insumos/tierra.html')
 
+# CRUD PRODUCTOS
+
+def es_admin(user):
+    return user.is_staff
+
+
+
+def obtener_subcategorias(request):
+    categoria_id = request.GET.get('categoria_id')
+
+    subcategorias = SubCategoria.objects.filter(categoria_id=categoria_id).values('subcategoria_id', 'subcategoria_nombre')
+
+    data = {
+        'subcategorias': list(subcategorias)
+    }
+
+    return JsonResponse(data)
+
+@login_required
+@user_passes_test(es_admin)
+def productos(request):
+    productos = Producto.objects.all()
+    return render(request, 'shopWeb/admin/productos.html', {'productos': productos})
+
+@login_required
+@user_passes_test(es_admin)
+def producto_nuevo(request):
+    if request.method == 'POST':
+        form = ProductoForm(request.POST, request.FILES)
+        if form.is_valid():
+            nombre = form.cleaned_data['nombre']
+            descripcion = form.cleaned_data['descripcion']
+            precio = form.cleaned_data['precio']
+            stock = form.cleaned_data['stock']
+            categoria_id = form.cleaned_data['categoria']
+            subcategoria_id = form.cleaned_data['subcategoria']
+            imagen = form.cleaned_data['imagen']
+            categoria = Categoria.objects.get(id_categoria=categoria_id)
+            subcategoria = SubCategoria.objects.get(id_subcategoria=subcategoria_id)
+
+            producto = Producto(nombre=nombre, descripcion=descripcion, precio=precio, stock=stock,
+                                id_categoria=categoria, id_subcategoria=subcategoria, img=imagen)
+            producto.save()
+            return redirect('productos')
+    else:
+        form = ProductoForm()
+
+    categorias = Categoria.objects.all()
+    subcategorias = SubCategoria.objects.all() 
+    return render(request, 'shopWeb/admin/producto_nuevo.html', {'form': form, 'categorias': categorias, 'subcategorias': subcategorias})
+
+@login_required
+@user_passes_test(es_admin)
+def producto_editar(request, id):
+    producto = get_object_or_404(Producto, id_producto=id)
+    if request.method == 'POST':
+        form = ProductoForm(request.POST, request.FILES, instance=producto)
+        if form.is_valid():
+            form.save()
+            return redirect('productos')
+    else:
+        form = ProductoForm(instance=producto)
+    return render(request, 'shopWeb/admin/producto_editar.html', {'form': form})
+
+@login_required
+@user_passes_test(es_admin)
+def producto_eliminar(request, id):
+    producto = get_object_or_404(Producto, id_producto=id)
+    producto.delete()
+    return redirect('shopWeb:productos')

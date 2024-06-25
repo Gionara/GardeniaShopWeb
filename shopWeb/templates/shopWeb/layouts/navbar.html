@@ -2,91 +2,160 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 
 <!-- NAVBAR-->
-<nav class="navbar navbar-dark navbar-expand-lg bg-dark sticky-top border-bottom pb-0">
-    <div class="container-fluid d-flex align-items-center justify-content-between">
+<nav
+    class="navbar navbar-dark navbar-expand-lg bg-dark sticky-top border-bottom pb-0">
+    <div
+        class="container-fluid d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-start">
-            <img src=" {% static 'img/logo/logo_color.png' %}" alt="logo color" width="40" class="me-2 mt-2">
-            <a class="navbar-brand dancing-script-font" href="{% url 'shopWeb:index' %}">
+            <img src="{% static 'img/logo/logo_color.png' %}" alt="logo color"
+                width="40" class="me-2 mt-2">
+            <a class="navbar-brand dancing-script-font"
+                href="{% url 'shopWeb:index' %}">
                 <h5>Gardenia Shop</h5>
             </a>
         </div>
-        <button class="navbar-toggler border-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" aria-controls="offcanvas" aria-label="Toggle navigation">
+        <button class="navbar-toggler border-white" type="button"
+            data-bs-toggle="offcanvas" data-bs-target="#offcanvas"
+            aria-controls="offcanvas" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="offcanvas  bg-dark offcanvas-end flex-column" id="offcanvas" aria-labelledby="offcanvasLabel">
+        <div class="offcanvas bg-dark offcanvas-end flex-column" id="offcanvas"
+            aria-labelledby="offcanvasLabel">
             <div class="offcanvas-header justify-content-between">
                 <div class="d-flex align-items-start">
-                    <img src=" {% static 'img/logo/logo_color.png' %}" alt="logo color" width="40" class="me-2 mt-2">
+                    <img src="{% static 'img/logo/logo_color.png' %}"
+                        alt="logo color" width="40" class="me-2 mt-2">
                     <h5 class="dancing-script-font">Gardenia Shop</h5>
                 </div>
-                <button type="button" class="btn-close  bg-light border-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                <button type="button" class="btn-close bg-light border-white"
+                    data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
 
-            <div class="offcanvas-body   justify-content-start align-items-start">
-                <ul class="navbar-nav me-auto  d-flex flex-column flex-lg-row flex-grow-1 align-items-start justify-content-between">
-                    <li class="nav-item dropdown ">
-                        <a class="nav-link dropdown-toggle comfortaa-font" href="#PRODUCTOS" id="navbarDropdownMenuLink1" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="offcanvas-body justify-content-start align-items-start">
+                <ul
+                    class="navbar-nav me-auto d-flex flex-column flex-lg-row flex-grow-1 align-items-start justify-content-between">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle comfortaa-font"
+                            href="#PRODUCTOS" id="navbarDropdownMenuLink1"
+                            role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
                             Productos
                         </a>
-                        <ul class="dropdown-menu dropdown-large" aria-labelledby="navbarDropdownMenuLink1">
-                            <div class="row g-2  mb-3">
-                                <div class="col-lg-4 col-md-12  mb-3">
+                        <ul class="dropdown-menu dropdown-large"
+                            aria-labelledby="navbarDropdownMenuLink1">
+                            <div class="row g-2 mb-3">
+                                <div class="col-lg-4 col-md-12 mb-3">
                                     <span class="dropdown-header">
-                                        <a href="{% url 'shopWeb:cat_herramientas' %}">Herramientas</a>
+                                        <a
+                                            href="{% url 'shopWeb:cat_herramientas' %}">Herramientas</a>
                                     </span>
-                                    <a class="dropdown-item" href="{% url 'shopWeb:tijeras' %}">Tijeras</a>
-                                    <a class="dropdown-item" href="{% url 'shopWeb:palas' %}">Palas</a>
-                                    <a class="dropdown-item" href="{% url 'shopWeb:otras_herramientas' %}">Otras Herramientas</a>
+                                    <a class="dropdown-item"
+                                        href="{% url 'shopWeb:tijeras' %}">Tijeras</a>
+                                    <a class="dropdown-item"
+                                        href="{% url 'shopWeb:palas' %}">Palas</a>
+                                    <a class="dropdown-item"
+                                        href="{% url 'shopWeb:otras_herramientas' %}">Otras
+                                        Herramientas</a>
                                 </div>
                                 <div class="col-lg-4 col-md-12 mb-3">
                                     <span class="dropdown-header">
-                                        <a href="{% url 'shopWeb:cat_plantas' %}">Plantas y Semillas</a>
+                                        <a
+                                            href="{% url 'shopWeb:cat_plantas' %}">Plantas
+                                            y Semillas</a>
                                     </span>
-                                    <a class="dropdown-item" href="{% url 'shopWeb:flores' %}">Flores</a>
-                                    <a class="dropdown-item" href="{% url 'shopWeb:plantas_arboles' %}">Plantas y Árboles</a>
-                                    <a class="dropdown-item" href="{% url 'shopWeb:huerto' %}">Huerto</a>
+                                    <a class="dropdown-item"
+                                        href="{% url 'shopWeb:flores' %}">Flores</a>
+                                    <a class="dropdown-item"
+                                        href="{% url 'shopWeb:plantas_arboles' %}">Plantas
+                                        y Árboles</a>
+                                    <a class="dropdown-item"
+                                        href="{% url 'shopWeb:huerto' %}">Huerto</a>
                                 </div>
                                 <div class="col-lg-4 col-md-12 mb-3">
                                     <span class="dropdown-header">
-                                        <a href="{% url 'shopWeb:cat_insumos' %}">Insumos</a>
+                                        <a
+                                            href="{% url 'shopWeb:cat_insumos' %}">Insumos</a>
                                     </span>
-                                    <a class="dropdown-item" href="{% url 'shopWeb:tierra' %}">Tierra</a>
-                                    <a class="dropdown-item" href="{% url 'shopWeb:fertilizantes' %}">Fertilizantes</a>
-                                    <a class="dropdown-item" href="{% url 'shopWeb:otros_insumos' %}">Otros Insumos</a>
+                                    <a class="dropdown-item"
+                                        href="{% url 'shopWeb:tierra' %}">Tierra</a>
+                                    <a class="dropdown-item"
+                                        href="{% url 'shopWeb:fertilizantes' %}">Fertilizantes</a>
+                                    <a class="dropdown-item"
+                                        href="{% url 'shopWeb:otros_insumos' %}">Otros
+                                        Insumos</a>
                                 </div>
                                 <li><hr class="dropdown-divider bg-light"></li>
-                                <li><a class="dropdown-item col-md-6" href="{% url 'shopWeb:all_products' %}">Todos los Productos</a></li>
+                                <li><a class="dropdown-item col-md-6"
+                                        href="{% url 'shopWeb:all_products' %}">Todos
+                                        los Productos</a></li>
                             </div>
                         </ul>
                     </li>
-                
-                <form class="d-flex " role="search">
-                    <input type="text" class="form-control me-2" placeholder="Buscar Producto">
-                    <button type="submit" class="btn btn-outline-success">
-                        <i class="bi bi-search"></i>
-                    </button>
-                </form>
-                <!-- INICIO DE SECCION / AUTENTIFICACION DE USUARIO-->
-                {% if request.user.is_authenticated %}
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle"  id="navbarDropdownMenuLink1" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-person-circle"  ></i>  {{request.user.first_name}}
+
+                    <form class="d-flex" role="search">
+                        <input type="text" class="form-control me-2"
+                            placeholder="Buscar Producto">
+                        <button type="submit" class="btn btn-outline-success">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </form>
+
+                    <!-- INICIO DE SECCION / AUTENTIFICACION DE USUARIO-->
+                    {% if request.user.is_authenticated %}
+                    {% if request.user.is_staff %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle"
+                            id="navbarDropdownMenuLink1" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle"></i>
+                            {{request.user.username}}
+                        </a>
+                        <ul class="dropdown-menu"
+                            aria-labelledby="navbarDropdownMenuLink1">
+                            <li><a class="dropdown-item"
+                                    href="{% url 'shopWeb:productos' %}">Productos</a></li>
+                            <li><a class="dropdown-item"
+                                    href="{% url 'shopWeb:agregar_producto' %}">Añadir
+                                    Producto</a></li>
+                            <li><a class="dropdown-item"
+                                    href="{% url 'shopWeb:logout' %}">Cerrar
+                                    Sesión</a></li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle"
+                            id="navbarDropdownMenuLink1" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle"></i>
+                            {{request.user.first_name}}
+                        </a>
+                        <ul class="dropdown-menu"
+                            aria-labelledby="navbarDropdownMenuLink1">
+                            <li><a class="dropdown-item"
+                                    href="{% url 'shopWeb:profile' %}">Perfil</a></li>
+                            <li><a class="dropdown-item" href="#">Mis
+                                    Pedidos</a></li>
+                            <li><a class="dropdown-item"
+                                    href="{% url 'shopWeb:logout' %}">Cerrar
+                                    Sesión</a></li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                    {% else %}
+                    <a class="nav-link comfortaa-font" id="singin" href="#"
+                        data-bs-toggle="modal" data-bs-target="#modalSignin">
+                        <i class="bi bi-person-circle"></i> Iniciar Sesión
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink1">
-                      <li><a class="dropdown-item" href="{% url 'shopWeb:profile' %}"> Perfil</a></li>
-                      <li><a class="dropdown-item" href="#"> Mis Pedidos</a></li>
-                      <li><a class="dropdown-item" href="{% url 'shopWeb:logout' %}"> Cerrar Sección</a></li>
-                    </ul>
-                  </li>
-                {% else %}
-                <a class="nav-link comfortaa-font" id="singin" href="#" data-bs-toggle="modal" data-bs-target="#modalSignin">
-                    <i class="bi bi-person-circle"  ></i> Iniciar Sesión
-                </a>
-                 {% endif %}
-                <button class="btn btn-outline-success ms-3 carrito-button" type="button" data-bs-toggle="offcanvas" data-bs-target="#carrito-offcanvas" aria-controls="offcanvasCarrito">
-                    <i class="bi bi-cart"></i>
-                    <span id="carrito-icono">0</span>
-                </button>
+                    {% endif %}
+
+                    <button class="btn btn-outline-success ms-3 carrito-button"
+                        type="button" data-bs-toggle="offcanvas"
+                        data-bs-target="#carrito-offcanvas"
+                        aria-controls="offcanvasCarrito">
+                        <i class="bi bi-cart"></i>
+                        <span id="carrito-icono">0</span>
+                    </button>
                 </ul>
             </div>
         </div>

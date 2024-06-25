@@ -1,0 +1,42 @@
+{% extends 'shopWeb/layouts/base.html' %}
+{% load static %}
+
+{% block title %} Lista de Productos {% endblock %}
+{% block content %}
+    <div class="container">
+        <h1>Lista de Productos</h1>
+        <a href="{% url 'shopWeb:agregar_producto' %}" class="btn btn-primary">Crear Producto</a>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Categoría</th>
+                    <th>Imagen</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos %}
+                    <tr>
+                        <td>{{ producto.nombre }}</td>
+                        <td>{{ producto.descripcion }}</td>
+                        <td>{{ producto.precio }}</td>
+                        <td>{{ producto.stock }}</td>
+                        <td>{{ producto.id_categoria.categoria }}</td>
+                        <td>{{ producto.id_subcategoria.subcategoria }}</td>
+                        <td>
+                            <img src="{{ producto.img.url }}" alt="{{ producto.nombre }}" width="100">
+                        </td>
+                        <td>
+                            <a href="{% url 'shopWeb:editar_producto' producto.id %}" class="btn btn-warning">Editar</a>
+                            <a href="{% url 'shopWeb:eliminar_producto' producto.id %}" class="btn btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
