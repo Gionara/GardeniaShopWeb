@@ -24,7 +24,7 @@ class Producto(models.Model):
     precio = models.IntegerField()
     stock = models.IntegerField()
     descripcion = models.CharField(max_length=250, blank=True, null=True)
-    img = models.ImageField(upload_to='static/img/productos/')
+    img = models.ImageField(upload_to='productos/', null=True, blank=True)
 
     def __str__(self):
         return f'{self.nombre} - {self.id_categoria.categoria_nombre} - {self.id_subcategoria.subcategoria_nombre}'

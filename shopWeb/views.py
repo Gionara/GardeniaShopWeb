@@ -146,16 +146,9 @@ def es_admin(user):
 
 
 
-def obtener_subcategorias(request):
-    categoria_id = request.GET.get('categoria_id')
-
-    subcategorias = SubCategoria.objects.filter(categoria_id=categoria_id).values('subcategoria_id', 'subcategoria_nombre')
-
-    data = {
-        'subcategorias': list(subcategorias)
-    }
-
-    return JsonResponse(data)
+def get_subcategorias(request, categoria_id):
+    subcategorias = list(SubCategoria.objects.filter(categoria_id=categoria_id).values('subcategoria_id', 'subcategoria_nombre'))
+    return JsonResponse(subcategorias, safe=False)
 
 @login_required
 @user_passes_test(es_admin)
@@ -165,27 +158,17 @@ def productos(request):
 
 @login_required
 @user_passes_test(es_admin)
+
 def producto_nuevo(request):
     if request.method == 'POST':
         form = ProductoForm(request.POST, request.FILES)
         if form.is_valid():
-            nombre = form.cleaned_data['nombre']
-            descripcion = form.cleaned_data['descripcion']
-            precio = form.cleaned_data['precio']
-            stock = form.cleaned_data['stock']
-            categoria_id = form.cleaned_data['categoria']
-            subcategoria_id = form.cleaned_data['subcategoria']
-            imagen = form.cleaned_data['imagen']
-            categoria = Categoria.objects.get(id_categoria=categoria_id)
-            subcategoria = SubCategoria.objects.get(id_subcategoria=subcategoria_id)
-
-            producto = Producto(nombre=nombre, descripcion=descripcion, precio=precio, stock=stock,
-                                id_categoria=categoria, id_subcategoria=subcategoria, img=imagen)
-            producto.save()
+            form.save()
             return redirect('productos')
+        else:
+            print(form.errors)
     else:
         form = ProductoForm()
-
     categorias = Categoria.objects.all()
     subcategorias = SubCategoria.objects.all() 
     return render(request, 'shopWeb/admin/producto_nuevo.html', {'form': form, 'categorias': categorias, 'subcategorias': subcategorias})
@@ -201,11 +184,18 @@ def producto_editar(request, id):
             return redirect('productos')
     else:
         form = ProductoForm(instance=producto)
-    return render(request, 'shopWeb/admin/producto_editar.html', {'form': form})
+    categorias = Categoria.objects.all()
+    subcategorias = SubCategoria.objects.filter(categoria=producto.id_categoria)
+    return render(request, 'shopWeb/admin/producto_editar.html', {
+        'form': form,
+        'producto': producto,
+        'categorias': categorias,
+        'subcategorias': subcategorias
+    })
 
 @login_required
 @user_passes_test(es_admin)
 def producto_eliminar(request, id):
     producto = get_object_or_404(Producto, id_producto=id)
     producto.delete()
-    return redirect('shopWeb:productos')
+    return redirect('productos')

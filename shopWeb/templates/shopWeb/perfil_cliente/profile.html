@@ -101,7 +101,7 @@ $(document).ready(function() {
 
         $.ajax({
             type: 'POST',
-            url: '{% url "shopWeb:profile" %}',
+            url: '{% url "profile" %}',
             data: {
                 old_password: oldPassword,
                 new_password1: newPassword1,
@@ -121,7 +121,7 @@ $(document).ready(function() {
                     }
                 } else {
                     alert('¡Tu contraseña ha sido actualizada correctamente!');
-                    window.location.href = '{% url "shopWeb:profile" %}';
+                    window.location.href = '{% url "profile" %}';
                 }
             },
             error: function(xhr, status, error) {

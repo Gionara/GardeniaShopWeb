@@ -20,7 +20,7 @@
                 <h4 class="mb-3">Datos Personales</h4>
                 
                 <form id="formulario_registro" class="needs-validation"
-                    novalidate action="{% url 'shopWeb:register' %}"
+                    novalidate action="{% url 'register' %}"
                     method="POST">
                     {% csrf_token %}
                     <small  class="text-danger col-12">

@@ -17,7 +17,7 @@
             </div>
             <div class="modal-body p-5 pt-0">
                 <form id="login_form" method="POST"
-                    action="{% url 'shopWeb:login' %}">
+                    action="{% url 'login' %}">
                     {% csrf_token %}
                     <div class="form-floating mb-3" style="padding-top: 2%;">
                         <input type="email" class="form-control rounded-3"
@@ -40,7 +40,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <a class="btn btn-success" href="{% url 'shopWeb:register' %}"
+                <a class="btn btn-success" href="{% url 'register' %}"
                     role="button">Registrarse</a>
                 <button type="button" class="btn btn-secondary"
                     data-bs-dismiss="modal">Cerrar</button>
