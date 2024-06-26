@@ -54,9 +54,13 @@ def login_view(request):
             return JsonResponse({'error': True, 'field': 'password', 'message': "La contraseña es incorrecta."})
 
         # Iniciar sesión si el usuario y contraseña son válidos
-        login(request, user)
-        return JsonResponse({'error': False, 'message': "Inicio de sesión exitoso."})
-
+        if user is not None:
+            if user.is_superuser:
+                login(request, user)
+                return JsonResponse({'error': False, 'message': "Inicio de sesión exitoso."})
+            else:
+                login(request, user)
+                return JsonResponse({'error': False, 'redirect_url': '/shopWeb/index'})
     return JsonResponse({'error': True, 'message': "Método no permitido."})
  
 # LOGOUT
