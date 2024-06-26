@@ -6,6 +6,7 @@
     --color-primary: #FFA500;
     --color-secondary: #FFD700;
     --color-tertiary: #32CD32;
+    --color-red: #aa2929f0;
     --color-dark: #333333;
     --color-light: #FFFFFF;
     --color-black: #000000;
@@ -72,9 +73,9 @@ a:hover {
 }
 
 /* Define la clase hidden para ocultar elementos */
-.hidden {
+/* .hidden {
     display: none;
-}
+} */
 
 
 /* NAVBAR STYLE */
@@ -238,9 +239,9 @@ footer {
 }
 
 /* Ocultar footer */
-footer.hidden {
+/* footer.hidden {
     display: none;
-}
+} */
 
 
 .logo_footer {
@@ -388,7 +389,7 @@ li {
     margin: 0 auto;
     position: relative;
     z-index: 1;
-    /* Asegura que el contenido esté por encima de la imagen de fondo */
+  
 }
 
 
@@ -443,4 +444,99 @@ li {
         background-color: var(--color-dark);
         /* Cambia esto según el color que desees */
     }
+}
+
+/* PRODUCTOS PAGES */
+#productos-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    border-color: purple;
+
+}
+
+#productos-container .card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px 20px 10px 20px;
+}
+
+#productos-container .card-body {
+    flex: 1;
+}
+
+#productos-container .card-img-top {
+    width: 250px;
+    height: 200px;
+    object-fit: cover;
+}
+
+#productos-container .btn {
+    margin: 5px;
+    border-radius: 4px;
+}
+
+#productos-container .input-group {
+    width: 100%;
+    max-width: 150px;
+    margin: 10px auto;
+}
+
+#productos-container .input-group .btn {
+    border-radius: 0;
+}
+
+#productos-container .input-group .form-control {
+    text-align: center;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0;
+}
+
+#productos-container .descripcion {
+    margin-top: 10px;
+    font-size: 0.9em;
+    color: var(--color-dark);
+    background-color: var(--color-light);
+    border: 0.5px solid var(--color-dark) ;
+    padding: 10px;
+    border-radius: 4px;
+    display: flex;
+}
+#productos-container .card-title{
+    margin: 3px;
+    font-size: 20px;
+    color: var(--color-dark)
+}
+
+#productos-container .card-precio{
+    margin: 5px;
+    font-size: 18px;
+    font-weight: bolder;
+    color:var(--color-red)
+
+}
+#productos-container .card-precio{
+    margin: 3px;
+    font-size: 19px;
+    font-weight: bolder;
+    color:var(--color-black)
+
+}
+#productos-container .card-stock{
+    margin: 3px;
+    font-size: 12px;
+    font-weight:500;
+    color:var(--color-red);
+    display: flex;
+
 }

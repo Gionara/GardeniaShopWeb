@@ -1,0 +1,48 @@
+{% extends 'shopWeb/layouts/base_productos.html' %}
+
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+{% block title %}{{ categoria_nombre }} - {{ subcategoria_nombre }}{% endblock%}
+
+{% block content %}
+
+<h1>{{ categoria_nombre }} - {{ subcategoria_nombre }}</h1>
+<div id="productos-container" class="row">
+    {% if productos %}
+    {% for producto in productos %}
+    <div class="col-lg-3 col-md-6 col-sm-8 mb-2">
+        <div class="card ">
+            <h5 class="card-title comfortaa-font">{{ producto.nombre }}</h5>
+            <div class="card-body">
+                <img class="card-img-top" src="{{ producto.img.url }}"
+                    alt="{{ producto.nombre }}" width="200px" height="200px">
+                <h6 class="card-precio">Precio: ${{ producto.precio }}</h6>
+               <small class="card-stock">
+                stock: {{ producto.stock}} unidades
+               </small>
+                <button
+                    class="btn btn-outline-secondary detalles-btn">Detalles</button>
+                <div class="descripcion">{{ producto.descripcion }}
+
+                </div>
+                <div class="input-group mt-3">
+                    <button
+                        class="btn btn-outline-secondary menos-btn">-</button>
+                    <input class="form-control cantidad-input" type="text"
+                        value="1" readonly
+                        id="cantidad-{{ producto.id_producto }}"
+                        name="cantidad-{{ producto.id_producto }}">
+                    <button class="btn btn-outline-secondary mas-btn">+</button>
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-outline-secondary añadir-btn">Añadir al
+            Carrito</button>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p>No hay productos disponibles en esta categoría y subcategoría.</p>
+    {% endif %}
+</div>
+{% endblock %}

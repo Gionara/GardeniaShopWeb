@@ -50,11 +50,11 @@
                                             href="{% url 'cat_herramientas' %}">Herramientas</a>
                                     </span>
                                     <a class="dropdown-item"
-                                        href="{% url 'tijeras' %}">Tijeras</a>
+                                        href="{% url 'productos' 'Herramientas' 'Tijeras' %}">Tijeras</a>
                                     <a class="dropdown-item"
-                                        href="{% url 'palas' %}">Palas</a>
+                                        href="{% url 'productos' 'Herramientas' 'Palas' %}">Palas</a>
                                     <a class="dropdown-item"
-                                        href="{% url 'otras_herramientas' %}">Otras
+                                        href="{% url 'productos' 'Herramientas' 'Otras Herramientas' %}">Otras
                                         Herramientas</a>
                                 </div>
                                 <div class="col-lg-4 col-md-12 mb-3">
@@ -64,12 +64,12 @@
                                             y Semillas</a>
                                     </span>
                                     <a class="dropdown-item"
-                                        href="{% url 'flores' %}">Flores</a>
+                                        href="{% url 'productos' 'Plantas' 'Flores' %}">Flores</a>
                                     <a class="dropdown-item"
-                                        href="{% url 'plantas_arboles' %}">Plantas
+                                        href="{% url 'productos' 'Plantas' 'Plantas y Arboles' %}">Plantas
                                         y Árboles</a>
                                     <a class="dropdown-item"
-                                        href="{% url 'huerto' %}">Huerto</a>
+                                        href="{% url 'productos' 'Plantas' 'Huerto' %}">Huerto</a>
                                 </div>
                                 <div class="col-lg-4 col-md-12 mb-3">
                                     <span class="dropdown-header">
@@ -77,16 +77,16 @@
                                             href="{% url 'cat_insumos' %}">Insumos</a>
                                     </span>
                                     <a class="dropdown-item"
-                                        href="{% url 'tierra' %}">Tierra</a>
+                                        href="{% url 'productos' 'Insumos' 'Tierra' %}">Tierra</a>
                                     <a class="dropdown-item"
-                                        href="{% url 'fertilizantes' %}">Fertilizantes</a>
+                                        href="{% url 'productos' 'Insumos' 'Fertilizantes' %}">Fertilizantes</a>
                                     <a class="dropdown-item"
-                                        href="{% url 'otros_insumos' %}">Otros
+                                        href="{% url 'productos' 'Insumos' 'Otros Insumos' %}">Otros
                                         Insumos</a>
                                 </div>
                                 <li><hr class="dropdown-divider bg-light"></li>
                                 <li><a class="dropdown-item col-md-6"
-                                        href="{% url 'all_products' %}">Todos
+                                        href="{% url 'productos' %}">Todos
                                         los Productos</a></li>
                             </div>
                         </ul>
@@ -113,7 +113,7 @@
                         <ul class="dropdown-menu"
                             aria-labelledby="navbarDropdownMenuLink1">
                             <li><a class="dropdown-item"
-                                    href="{% url 'productos' %}">Productos</a></li>
+                                    href="{% url 'productos_admin' %}">Productos</a></li>
                             <li><a class="dropdown-item"
                                     href="{% url 'agregar_producto' %}">Añadir
                                     Producto</a></li>

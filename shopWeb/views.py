@@ -66,7 +66,7 @@ def login_view(request):
 # LOGOUT
 def logout_view(request):
     logout(request)
-    return redirect(request.META.get('HTTP_REFERER', '/'))
+    return redirect(request.META.get('HTTP_REFERER', '/shopWeb/index'))
 # INFO 
 def politicas(request):
     return render(request, 'shopWeb/info/politicas.html')
@@ -93,61 +93,55 @@ def profile(request):
     else:
         form = PasswordChangeForm(request.user)
 
-    return render(request, 'shopWeb/perfil/profile.html', {'user': user, 'form': form})
-
-
+    return render(request, 'shopWeb/perfil_cliente/profile.html', {'user': user, 'form': form})
 
 #PRODUCTOS
 
-def all_products(request):
-    return render(request, 'shopWeb/productos/all_products.html')
+def productos_view(request, categoria_nombre, subcategoria_nombre):
+    categoria = get_object_or_404(Categoria, categoria_nombre=categoria_nombre)
+    subcategoria = get_object_or_404(SubCategoria, subcategoria_nombre=subcategoria_nombre, categoria=categoria)
+    productos = Producto.objects.filter(id_categoria=categoria, id_subcategoria=subcategoria)
+
+    print(productos)  # Para verificar que hay productos
+
+    context = {
+        'productos': productos,
+        'categoria_nombre': categoria_nombre,
+        'subcategoria_nombre': subcategoria_nombre,
+    }
+
+    return render(request, 'shopWeb/productos/productos.html', context)
+
+def all_productos_view(request):
+    
+    productos = Producto.objects.all()
+    print(productos)  
+
+    context = {
+        'productos': productos,
+    }
+    return render(request, 'shopWeb/productos/productos.html', context)
+
 
 #CATEGORIA HERRAMIENTAS
 def cat_herramientas(request):
     return render(request, 'shopWeb/productos/cat_herramientas/cat_herramientas.html')
-
-def palas(request):
-    return render(request, 'shopWeb/productos/cat_herramientas/palas.html')
-
-def tijeras(request):
-    return render(request, 'shopWeb/productos/cat_herramientas/tijeras.html')
-
-def otras_herramientas(request):
-    return render(request, 'shopWeb/productos/cat_herramientas/otras_herramientas.html')
 
 #CATEGORIA PLANTAS Y SEMILLAS
 
 def cat_plantas(request):
     return render(request, 'shopWeb/productos/cat_plantas/cat_plantas.html')
 
-def flores(request):
-    return render(request, 'shopWeb/productos/cat_plantas/flores.html')
-
-def huerto(request):
-    return render(request, 'shopWeb/productos/cat_plantas/huerto.html')
-
-def plantas_arboles(request):
-    return render(request, 'shopWeb/productos/cat_plantas/plantas_arboles.html')
-
 #CATEGORIA INSUMOS
 
 def cat_insumos(request):
     return render(request, 'shopWeb/productos/cat_insumos/cat_insumos.html')
 
-def fertilizantes(request):
-    return render(request, 'shopWeb/productos/cat_insumos/fertilizantes.html')
-
-def otros_insumos(request):
-    return render(request, 'shopWeb/productos/cat_insumos/otros_insumos.html')
-
-def tierra(request):
-    return render(request, 'shopWeb/productos/cat_insumos/tierra.html')
 
 # CRUD PRODUCTOS
 
 def es_admin(user):
     return user.is_staff
-
 
 
 def get_subcategorias(request, categoria_id):
