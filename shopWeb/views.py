@@ -8,6 +8,15 @@ from django.contrib.auth.decorators import login_required,user_passes_test
 from .models import Producto, Categoria, SubCategoria
 from .forms import ProductoForm
 
+# List of URLs that require authentication
+protected_urls = [
+    '/shopWeb/profile',  # Añade aquí todas las URLs que requieran autenticación
+    '/shopWeb/admin/productos/',
+    '/shopWeb/admin/productos/agregar',
+    '/shopWeb/admin/productos/editar/<int:id>',
+    '/shopWeb/productos/eliminar/<int:id>',
+]
+
 # Create your views here.
 
 #INDEX
@@ -65,8 +74,14 @@ def login_view(request):
  
 # LOGOUT
 def logout_view(request):
+    referer = request.META.get('HTTP_REFERER', '')
+
     logout(request)
-    return redirect(request.META.get('HTTP_REFERER', '/shopWeb/index'))
+    
+    if any(url in referer for url in protected_urls):
+        return redirect('/shopWeb/index')
+    else:
+        return redirect(referer or '/shopWeb/index')
 # INFO 
 def politicas(request):
     return render(request, 'shopWeb/info/politicas.html')

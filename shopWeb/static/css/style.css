@@ -73,9 +73,9 @@ a:hover {
 }
 
 /* Define la clase hidden para ocultar elementos */
-/* .hidden {
+ .hidden {
     display: none;
-} */
+}
 
 
 /* NAVBAR STYLE */
@@ -510,7 +510,7 @@ li {
     border: 0.5px solid var(--color-dark) ;
     padding: 10px;
     border-radius: 4px;
-    display: flex;
+    display: none;
 }
 #productos-container .card-title{
     margin: 3px;
