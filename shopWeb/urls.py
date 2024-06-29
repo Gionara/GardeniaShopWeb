@@ -11,6 +11,7 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('profile', views.profile, name='profile'),
+    path('carro_compras', views.carro_compras, name='carro_compras'),
 
 # INFO GARDENIA 
     path('politicas', views.politicas, name='politicas'),

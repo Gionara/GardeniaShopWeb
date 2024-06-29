@@ -82,12 +82,18 @@ def logout_view(request):
         return redirect('/shopWeb/index')
     else:
         return redirect(referer or '/shopWeb/index')
+
+# DETERMINAR ADMINISTRADORES
+def es_admin(user):
+    return user.is_staff
+
 # INFO 
 def politicas(request):
     return render(request, 'shopWeb/info/politicas.html')
 
 def sobre_nosotros(request):
     return render(request,'shopWeb/info/sobre_nosotros.html')
+
 
 #PERFIL 
 
@@ -110,6 +116,9 @@ def profile(request):
 
     return render(request, 'shopWeb/perfil_cliente/profile.html', {'user': user, 'form': form})
 
+#CARRITO DE COMPRAS
+def carro_compras(request):
+    return render(request, 'shopWeb\perfil_cliente\carro_compras.html')
 #PRODUCTOS
 
 def productos_view(request, categoria_nombre, subcategoria_nombre):
@@ -138,25 +147,19 @@ def all_productos_view(request):
     return render(request, 'shopWeb/productos/productos.html', context)
 
 
-#CATEGORIA HERRAMIENTAS
+#CATEGORIA PRODUCTOS
 def cat_herramientas(request):
     return render(request, 'shopWeb/productos/cat_herramientas/cat_herramientas.html')
 
-#CATEGORIA PLANTAS Y SEMILLAS
 
 def cat_plantas(request):
     return render(request, 'shopWeb/productos/cat_plantas/cat_plantas.html')
-
-#CATEGORIA INSUMOS
 
 def cat_insumos(request):
     return render(request, 'shopWeb/productos/cat_insumos/cat_insumos.html')
 
 
 # CRUD PRODUCTOS
-
-def es_admin(user):
-    return user.is_staff
 
 
 def get_subcategorias(request, categoria_id):
@@ -212,3 +215,25 @@ def producto_eliminar(request, id):
     producto = get_object_or_404(Producto, id_producto=id)
     producto.delete()
     return redirect('productos')
+
+
+# CRUD DE PEDIDOS 
+""" @login_required
+@user_passes_test(es_admin)
+def pedidos(request):
+    return render(request, 'shopWeb/admin/pedidos.html')
+
+@login_required
+@user_passes_test(es_admin)
+def pedido_nuevo(request):
+    return render(request, 'shopWeb/admin/pedido_nuevo.html')
+
+@login_required
+@user_passes_test(es_admin)
+def pedido_editar(request):
+    return render(request, 'shopWeb/admin/pedido_editar.html')
+
+@login_required
+@user_passes_test(es_admin)
+def pedido_eliminar(request):
+    return render(request, 'shopWeb/admin/pedido_eliminar.html') """

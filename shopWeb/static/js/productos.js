@@ -177,13 +177,17 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    const pagarCarrito = document.getElementById('pagar-carrito');
-    if (pagarCarrito) {
-        pagarCarrito.addEventListener('click', function () {
-            window.location.href = "/templates/carro_compras.html";
-        });
-    }
+    document.addEventListener("DOMContentLoaded", function () {
+        const pagarCarrito = document.getElementById('pagar-carrito');
+        if (pagarCarrito) {
+            pagarCarrito.addEventListener('click', function () {
+                // Redireccionar a la URL definida en Django para carro_compras
+                window.location.href = '/carro_compras/';
+            });
+        }
+    });
+    
 });
 
 
-// HOLAAAAAAAAKSJNAKJNA
+// HOLAAAAAAAAKSJNAKJNAHOLAjhgfdfgh
