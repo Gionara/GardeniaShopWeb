@@ -9,7 +9,8 @@ from django.contrib.auth.decorators import login_required,user_passes_test
 from .models import Producto, Categoria, SubCategoria
 from .forms import ProductoForm
 from django.views.decorators.csrf import csrf_exempt
-
+import json
+from django.db import transaction
 
 # List of URLs that require authentication
 protected_urls = [
@@ -123,43 +124,40 @@ def profile(request):
 def carro_compras(request):
     return render(request, 'shopWeb/perfil_cliente/carro_compras.html')
 
+
 @csrf_exempt
-@login_required
-def finalizar_pago(request):
-    if request.method == 'POST':
-        # Obtener los datos del carrito y del pago desde la solicitud
-        carrito = request.POST.get('carrito')
-        metodo_pago = request.POST.get('metodo_pago')
-        codigo_descuento = request.POST.get('codigo_descuento')
-
-        # Aquí puedes añadir lógica para aplicar el código de descuento, procesar el pago y descontar el stock
-        # Por ejemplo:
-        for item in carrito:
-            producto = Producto.objects.get(id_producto=item['id'])
-            producto.stock -= item['cantidad']
-            producto.save()
-
-        return JsonResponse({'success': True, 'message': 'Pago confirmado y productos descontados del stock.'})
-
-    return JsonResponse({'success': False, 'message': 'Método no permitido.'})
-
 @login_required
 @require_POST
 def procesar_pago(request):
     if request.method == 'POST':
-        carrito = request.session.get('carrito', {})
-        for producto_id, cantidad in carrito.items():
-            producto = get_object_or_404(Producto, id_producto=producto_id)
-            if producto.stock >= cantidad:
-                producto.stock -= cantidad
-                producto.save()
-            else:
-                return JsonResponse({'error': True, 'message': f"No hay suficiente stock para {producto.nombre}."})
+        try:
+            # Obtener el carrito de la sesión
+            carrito = request.session.get('carrito', {})
+            print(carrito)
+            with transaction.atomic():
+                # Iterar sobre los productos en el carrito y actualizar el stock
+                for producto_id, cantidad in carrito.items():
+                    print("Carrito items", carrito.items())
+                    producto = get_object_or_404(Producto, id_producto=int(producto_id))
+                    print("producto", producto)
+                    print("producto stock", producto.stock)
+                    if producto.stock >= cantidad:
+                        producto.stock -= cantidad
+                        producto.save()
+                    else:
+                        return JsonResponse({'error': True, 'message': f"No hay suficiente stock para {producto.nombre}."})
+                
+                # Vaciar el carrito después de procesar el pago
+                request.session['carrito'] = {}
 
-        # Vaciar el carrito después de procesar el pago
-        request.session['carrito'] = {}
-        return JsonResponse({'error': False, 'message': 'Pago procesado correctamente.'})
+                return JsonResponse({'error': False, 'message': 'Pago procesado correctamente.'})
+        
+        except Exception as e:
+            return JsonResponse({'error': True, 'message': str(e)}, status=500)
+
     return JsonResponse({'error': True, 'message': 'Método no permitido.'})
+
+
 #PRODUCTOS
 
 def productos_view(request, categoria_nombre, subcategoria_nombre):
@@ -190,14 +188,14 @@ def all_productos_view(request):
 
 #CATEGORIA PRODUCTOS
 def cat_herramientas(request):
-    return render(request, 'shopWeb/productos/cat_herramientas/cat_herramientas.html')
+    return render(request, 'shopWeb/productos/cat_herramientas.html')
 
 
 def cat_plantas(request):
-    return render(request, 'shopWeb/productos/cat_plantas/cat_plantas.html')
+    return render(request, 'shopWeb/productos/cat_plantas.html')
 
 def cat_insumos(request):
-    return render(request, 'shopWeb/productos/cat_insumos/cat_insumos.html')
+    return render(request, 'shopWeb/productos/cat_insumos.html')
 
 
 # CRUD PRODUCTOS

@@ -12,7 +12,6 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('profile', views.profile, name='profile'),
     path('carro_compras', views.carro_compras, name='carro_compras'),
-    path('finalizar_pago/', views.finalizar_pago, name='finalizar_pago'),
     path('procesar_pago/', views.procesar_pago, name='procesar_pago'),
 
 # INFO GARDENIA 

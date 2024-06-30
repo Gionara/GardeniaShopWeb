@@ -17,12 +17,7 @@
 
         <!-- CONTENIDO-->
         <div class="content">
-            {% if request.user.is_authenticated %}
-                <p>Bienvenido, {{ request.user.username }}, {{ request.user.userprofile.nombre }}</p>
-                <p>nombre: , {{request.user.first_name}} </p>
-                {% else %}
-                <p>No has iniciado sesión.</p>
-            {% endif %}
+
         
             {% block content %}
             {% endblock %}

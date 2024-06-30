@@ -232,28 +232,40 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         function processPayment() {
-            const productos = []; // Aquí debes obtener la lista de productos en el carrito
-            const cantidades = []; // Y las cantidades respectivas
-
-            // Lógica para llenar las listas productos y cantidades
-
-            fetch('/confirmar_pago/', {
+            const productos = [];
+            const cantidades = [];
+        
+            // Construye la lista de productos y cantidades desde el carrito
+            carrito.forEach(item => {
+                productos.push(item.producto.id);
+                cantidades.push(item.cantidad);
+            });
+        
+            fetch('/finalizar_pago/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': getCookie('csrftoken')
                 },
-                body: JSON.stringify({ productos: productos, cantidades: cantidades })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert("Pago confirmado. Se descontará la cantidad de productos del stock.");
-                    }
+                body: JSON.stringify({
+                    carrito: carrito,  // Aquí envías todo el carrito como JSON
+                    metodo_pago: 'tarjeta',  // Ejemplo de método de pago, puedes ajustarlo según tus necesidades
+                    codigo_descuento: ''  // Ajusta según necesites manejar códigos de descuento
                 })
-                .catch(error => console.error('Error:', error));
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Pago confirmado. Se descontará la cantidad de productos del stock.");
+                    localStorage.removeItem('carrito');
+                    location.reload();  // O redirige a otra página según tus necesidades
+                } else {
+                    alert("Error al procesar el pago.");
+                }
+            })
+            .catch(error => console.error('Error:', error));
         }
-
+        
         function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== '') {
