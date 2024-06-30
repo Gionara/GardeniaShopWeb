@@ -2,11 +2,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required,user_passes_test
 from .models import Producto, Categoria, SubCategoria
 from .forms import ProductoForm
+from django.views.decorators.csrf import csrf_exempt
+
 
 # List of URLs that require authentication
 protected_urls = [
@@ -118,7 +121,45 @@ def profile(request):
 
 #CARRITO DE COMPRAS
 def carro_compras(request):
-    return render(request, 'shopWeb\perfil_cliente\carro_compras.html')
+    return render(request, 'shopWeb/perfil_cliente/carro_compras.html')
+
+@csrf_exempt
+@login_required
+def finalizar_pago(request):
+    if request.method == 'POST':
+        # Obtener los datos del carrito y del pago desde la solicitud
+        carrito = request.POST.get('carrito')
+        metodo_pago = request.POST.get('metodo_pago')
+        codigo_descuento = request.POST.get('codigo_descuento')
+
+        # Aquí puedes añadir lógica para aplicar el código de descuento, procesar el pago y descontar el stock
+        # Por ejemplo:
+        for item in carrito:
+            producto = Producto.objects.get(id_producto=item['id'])
+            producto.stock -= item['cantidad']
+            producto.save()
+
+        return JsonResponse({'success': True, 'message': 'Pago confirmado y productos descontados del stock.'})
+
+    return JsonResponse({'success': False, 'message': 'Método no permitido.'})
+
+@login_required
+@require_POST
+def procesar_pago(request):
+    if request.method == 'POST':
+        carrito = request.session.get('carrito', {})
+        for producto_id, cantidad in carrito.items():
+            producto = get_object_or_404(Producto, id_producto=producto_id)
+            if producto.stock >= cantidad:
+                producto.stock -= cantidad
+                producto.save()
+            else:
+                return JsonResponse({'error': True, 'message': f"No hay suficiente stock para {producto.nombre}."})
+
+        # Vaciar el carrito después de procesar el pago
+        request.session['carrito'] = {}
+        return JsonResponse({'error': False, 'message': 'Pago procesado correctamente.'})
+    return JsonResponse({'error': True, 'message': 'Método no permitido.'})
 #PRODUCTOS
 
 def productos_view(request, categoria_nombre, subcategoria_nombre):
@@ -180,7 +221,7 @@ def producto_nuevo(request):
         form = ProductoForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('productos')
+            return redirect('productos_admin')
         else:
             print(form.errors)
     else:

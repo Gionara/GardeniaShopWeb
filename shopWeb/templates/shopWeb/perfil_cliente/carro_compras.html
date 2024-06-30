@@ -9,7 +9,88 @@
 
 <div class="container mt-5">
     <h2>Carro de Compras</h2>
+    <main>
+        <div class="container-fluid py-5">
+            <div class="row justify-content-end">
+                <div class="col-lg-6 col-md-8">
+                    <h4>Productos</h4>
+                    <div id="carrito-container"></div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <button class="btn btn-outline-danger mt-3" id="vaciar-carrito">
+                            <h6><i class="bi bi-trash3-fill"></i>Vaciar Carrito</h6>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <h3>Resumen de compra</h3>
+                    <br>
+                    <div id="total-container"></div>
+                    <br>
+                    <div id="cantidad-total"></div>
+                    <br>
+                    <div class="d-grid gap-2 col-6 mx-auto">
+                        <button class="btn btn-success mt-3 btn-lg" id="pagar-carrito">Pagar Productos</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
 
-    
-    {% endblock %}
-    
+<!-- Modal de Confirmación de Pago -->
+<div class="modal fade" id="modalConfirmarPago" tabindex="-1" aria-labelledby="modalConfirmarPagoLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-dark">
+                <h5 class="modal-title" id="modalConfirmarPagoLabel">Confirmar Pago</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas realizar el pago?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" id="confirmar-pago">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Mostrar modal de inicio de sesión si no está logeado
+        $('#pagar-carrito').on('click', function() {
+            {% if not request.user.is_authenticated %}
+                $('#modalSignin').modal('show');
+            {% else %}
+                $('#modalConfirmarPago').modal('show');
+            {% endif %}
+        });
+
+        // Procesar pago y actualizar stock
+        $('#confirmar-pago').on('click', function() {
+            $.ajax({
+                type: 'POST',
+                url: '{% url "procesar_pago" %}',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                },
+                success: function(response) {
+                    if (response.error) {
+                        alert(response.message);
+                    } else {
+                        alert(response.message);
+                        location.reload();  // Recargar la página después de procesar el pago
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('Ha ocurrido un error, por favor intente de nuevo.');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

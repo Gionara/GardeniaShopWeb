@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const cantidadTotalCarrito = document.getElementById('cantidad-total');
             if (cantidadTotalCarrito) {
                 const totalCantidadCarrito = carrito.reduce((total, item) => total + item.cantidad, 0);
-                cantidadTotalCarrito.innerHTML = `<h5>Cantidad de Productos: ${totalCantidadCarrito} </h5>`;
+                cantidadTotalCarrito.innerHTML = `<h4>Cantidad de Productos: ${totalCantidadCarrito} </h4>`;
             }
 
             document.querySelectorAll('.menos-btn').forEach(button => {
@@ -163,7 +163,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
     }
-    
+
 
     cargarCarrito();
     añadirEventListeners();
@@ -186,8 +186,90 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
     });
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const pagarCarrito = document.getElementById('pagar-carrito');
+        const opcionesPago = document.getElementById('opciones-pago');
+        const metodoPago = document.getElementById('metodo-pago');
+        const codigoDescuento = document.getElementById('codigo-descuento');
+
+        if (pagarCarrito) {
+            pagarCarrito.addEventListener('click', function () {
+                if (!isUserLoggedIn()) {
+                    showLoginModal();
+                } else {
+                    if (opcionesPago.style.display === 'none') {
+                        opcionesPago.style.display = 'block';
+                    } else {
+                        confirmPayment();
+                    }
+                }
+            });
+        }
+
+        function isUserLoggedIn() {
+            // Suponiendo que tienes un indicador en la página que muestra si el usuario está autenticado
+            return document.querySelector('p.logged-in') !== null;
+        }
+
+        function showLoginModal() {
+            const loginModal = new bootstrap.Modal(document.getElementById('modalSignin'), {});
+            loginModal.show();
+        }
+
+        function confirmPayment() {
+            const confirmPayment = confirm("¿Confirmar el pago?");
+            if (confirmPayment) {
+                // Lógica para procesar el pago y descontar stock
+                processPayment();
+            }
+        }
+
+        function processPayment() {
+            // Aquí iría tu lógica para procesar el pago y descontar el stock
+            alert("Pago confirmado. Se descontará la cantidad de productos del stock.");
+        }
+
+        function processPayment() {
+            const productos = []; // Aquí debes obtener la lista de productos en el carrito
+            const cantidades = []; // Y las cantidades respectivas
+
+            // Lógica para llenar las listas productos y cantidades
+
+            fetch('/confirmar_pago/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ productos: productos, cantidades: cantidades })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Pago confirmado. Se descontará la cantidad de productos del stock.");
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+    });
+
     
 });
-
-
-// HOLAAAAAAAAKSJNAKJNAHOLAjhgfdfgh
