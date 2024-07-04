@@ -121,9 +121,30 @@ def profile(request):
     return render(request, 'shopWeb/perfil_cliente/profile.html', {'user': user, 'form': form})
 
 #CARRITO DE COMPRAS
-def carro_compras(request):
-    return render(request, 'shopWeb/perfil_cliente/carro_compras.html')
 
+@csrf_exempt
+def guardar_carrito(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            carrito = data.get('carrito', [])
+            request.session['carrito'] = carrito
+            # Guardar el carrito también en las cookies si es necesario
+            response = JsonResponse({'success': True})
+            response.set_cookie('carrito', json.dumps(carrito))  # Ejemplo de cómo guardar en las cookies
+            return response
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+def carro_compras(request):
+    # Cargar el carrito desde las cookies
+    carrito_cookie = request.COOKIES.get('carrito', '[]')
+    carrito = json.loads(carrito_cookie)
+    print("\n\n CARRITO", carrito)
+    context = {'productos_carrito': carrito}
+
+    return render(request, 'shopWeb/perfil_cliente/carro_compras.html', context)
 
 @csrf_exempt
 @login_required
@@ -132,27 +153,39 @@ def procesar_pago(request):
     if request.method == 'POST':
         try:
             # Obtener el carrito de la sesión
-            carrito = request.session.get('carrito', {})
-            print(carrito)
+            carrito = request.session.get('carrito', [])
+            print("\n\n CARRITO:", carrito)  # Imprime el carrito para verificar
+
             with transaction.atomic():
                 # Iterar sobre los productos en el carrito y actualizar el stock
-                for producto_id, cantidad in carrito.items():
-                    print("Carrito items", carrito.items())
-                    producto = get_object_or_404(Producto, id_producto=int(producto_id))
-                    print("producto", producto)
-                    print("producto stock", producto.stock)
-                    if producto.stock >= cantidad:
-                        producto.stock -= cantidad
-                        producto.save()
-                    else:
-                        return JsonResponse({'error': True, 'message': f"No hay suficiente stock para {producto.nombre}."})
-                
-                # Vaciar el carrito después de procesar el pago
-                request.session['carrito'] = {}
+                for item in carrito:
+                    try:
+                        producto_id = item['producto']['id']
+                        cantidad = item['cantidad']
+                        print("\n\n Procesando producto_id:", producto_id, "Cantidad:", cantidad)
+                        
+                        # Utilizar id_producto en lugar de id
+                        producto = get_object_or_404(Producto, id_producto=int(producto_id))
+                        print("\n\n Producto obtenido:", producto)
 
+                        if producto.stock >= cantidad:
+                            producto.stock -= cantidad
+                            producto.save()
+                            print("\n\n Producto actualizado:", producto)
+                        else:
+                            print("\n\n Stock insuficiente para:", producto.nombre)
+                            return JsonResponse({'error': True, 'message': f"No hay suficiente stock para {producto.nombre}."})
+                    except Exception as e:
+                        print("\n\n Error al procesar item:", item, "Error:", str(e))
+                        return JsonResponse({'error': True, 'message': f"Error al procesar el producto {item['producto']['nombre']}: {str(e)}"})
+
+                # Vaciar el carrito después de procesar el pago
+                request.session['carrito'] = []
+                print("\n\n Carrito vaciado después del pago")
                 return JsonResponse({'error': False, 'message': 'Pago procesado correctamente.'})
-        
+
         except Exception as e:
+            print("\n\n Error en el procesamiento del pago:", str(e))
             return JsonResponse({'error': True, 'message': str(e)}, status=500)
 
     return JsonResponse({'error': True, 'message': 'Método no permitido.'})
@@ -165,7 +198,7 @@ def productos_view(request, categoria_nombre, subcategoria_nombre):
     subcategoria = get_object_or_404(SubCategoria, subcategoria_nombre=subcategoria_nombre, categoria=categoria)
     productos = Producto.objects.filter(id_categoria=categoria, id_subcategoria=subcategoria)
 
-    print(productos)  # Para verificar que hay productos
+
 
     context = {
         'productos': productos,
@@ -178,7 +211,7 @@ def productos_view(request, categoria_nombre, subcategoria_nombre):
 def all_productos_view(request):
     
     productos = Producto.objects.all()
-    print(productos)  
+  
 
     context = {
         'productos': productos,

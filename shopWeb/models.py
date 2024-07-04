@@ -46,12 +46,19 @@ class Pedido(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     id_pedido = models.AutoField(primary_key=True)
     fecha_pedido = models.DateTimeField(auto_now_add=True)
-    fecha_entrega = models.DateTimeField()
+    fecha_entrega = models.DateTimeField(null=True, blank=True)
     direccion = models.ForeignKey(User_direccion, on_delete=models.CASCADE)
     total = models.IntegerField()
     estado = models.CharField(max_length=50)
     pagado = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.user.username
-    
+        return f'Pedido {self.id_pedido} - {self.user.username}'
+
+class PedidoProducto(models.Model):
+    pedido = models.ForeignKey(Pedido, related_name='productos', on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    cantidad = models.IntegerField()
+
+    def __str__(self):
+        return f'{self.cantidad} x {self.producto.nombre}'

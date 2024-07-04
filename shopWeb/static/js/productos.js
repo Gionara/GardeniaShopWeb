@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-
     let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 
     function agregarAlCarrito(producto, cantidad) {
@@ -16,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             carrito.push({ producto, cantidad });
         }
+        console.log("Producto agregado:", carrito); // Depuración
         actualizarCarrito();
         guardarCarrito();
     }
@@ -31,23 +31,45 @@ document.addEventListener("DOMContentLoaded", function () {
                 guardarCarrito();
             }
         }
+        console.log("Cantidad modificada:", carrito); // Depuración
     }
 
     function eliminarProducto(producto) {
         carrito = carrito.filter(item => item.producto.id !== producto.id);
+        console.log("Producto eliminado:", carrito); // Depuración
         actualizarCarrito();
         guardarCarrito();
     }
 
     function guardarCarrito() {
-        localStorage.setItem('carrito', JSON.stringify(carrito));
+        localStorage.setItem('carrito', JSON.stringify(carrito));  // Guardar en localStorage
+        var csrftoken = getCookie('csrftoken');  // Obtener el CSRF Token desde las cookies
+        console.log(csrftoken);
+        $.ajax({
+            url: 'shopWeb/guardar_carrito/',  // Asegúrate de que la URL sea absoluta o correcta
+            type: 'POST',
+            headers: { 'X-CSRFToken': csrftoken },  // Incluir el CSRF Token en los headers
+            contentType: 'application/json',
+            data: JSON.stringify({ carrito: carrito }),  // Enviar el carrito actual al servidor
+            success: function(response) {
+                console.log('Carrito guardado exitosamente:', response);
+                // Manejar la respuesta del servidor si es necesario
+            },
+            error: function(xhr, status, error) {
+                console.error('Error al guardar el carrito:', error);
+                // Manejar errores si es necesario
+            }
+        });
     }
 
     function cargarCarrito() {
         const carritoGuardado = JSON.parse(localStorage.getItem('carrito'));
         if (carritoGuardado) {
             carrito = carritoGuardado;
+            console.log("Carrito cargado desde localStorage:", carrito); // Depuración
             actualizarCarrito();
+        } else {
+            console.log("No se encontró carrito en localStorage"); // Depuración
         }
     }
 
@@ -142,6 +164,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             });
         }
+        console.log("Carrito actualizado en el DOM:", carrito); // Depuración
     }
 
     function añadirEventListeners() {
@@ -158,130 +181,52 @@ document.addEventListener("DOMContentLoaded", function () {
                     const cantidad = parseInt(card.querySelector('.cantidad-input').value);
                     agregarAlCarrito(producto, cantidad);
                 } else {
-                    console.error('No se pudo encontrar el elemento card asociado al botón añadir');
+                    console.error('No se pudo encontrar el elemento card asociado al botón añadir'); // Depuración
                 }
             });
         });
+        console.log("EventListeners añadidos a los botones de añadir"); // Depuración
     }
 
-
-    cargarCarrito();
-    añadirEventListeners();
-
-    const vaciarCarrito = document.getElementById('vaciar-carrito');
-    if (vaciarCarrito) {
-        vaciarCarrito.addEventListener('click', function () {
-            carrito = [];
-            actualizarCarrito();
-            guardarCarrito();
-        });
+    function enviarCarritoAlServidor() {
+        fetch('shopWeb/guardar_carrito/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({ carrito: carrito })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Carrito guardado en el servidor.'); // Depuración
+            } else {
+                console.error('Error al guardar el carrito en el servidor:', data.error); // Depuración
+            }
+        })
+        .catch(error => console.error('Error:', error)); // Depuración
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
-        const pagarCarrito = document.getElementById('pagar-carrito');
-        if (pagarCarrito) {
-            pagarCarrito.addEventListener('click', function () {
-                // Redireccionar a la URL definida en Django para carro_compras
-                window.location.href = '/carro_compras/';
-            });
-        }
-    });
-
-
-    document.addEventListener("DOMContentLoaded", function () {
-        const pagarCarrito = document.getElementById('pagar-carrito');
-        const opcionesPago = document.getElementById('opciones-pago');
-        const metodoPago = document.getElementById('metodo-pago');
-        const codigoDescuento = document.getElementById('codigo-descuento');
-
-        if (pagarCarrito) {
-            pagarCarrito.addEventListener('click', function () {
-                if (!isUserLoggedIn()) {
-                    showLoginModal();
-                } else {
-                    if (opcionesPago.style.display === 'none') {
-                        opcionesPago.style.display = 'block';
-                    } else {
-                        confirmPayment();
-                    }
-                }
-            });
-        }
-
-        function isUserLoggedIn() {
-            // Suponiendo que tienes un indicador en la página que muestra si el usuario está autenticado
-            return document.querySelector('p.logged-in') !== null;
-        }
-
-        function showLoginModal() {
-            const loginModal = new bootstrap.Modal(document.getElementById('modalSignin'), {});
-            loginModal.show();
-        }
-
-        function confirmPayment() {
-            const confirmPayment = confirm("¿Confirmar el pago?");
-            if (confirmPayment) {
-                // Lógica para procesar el pago y descontar stock
-                processPayment();
-            }
-        }
-
-        function processPayment() {
-            // Aquí iría tu lógica para procesar el pago y descontar el stock
-            alert("Pago confirmado. Se descontará la cantidad de productos del stock.");
-        }
-
-        function processPayment() {
-            const productos = [];
-            const cantidades = [];
-        
-            // Construye la lista de productos y cantidades desde el carrito
-            carrito.forEach(item => {
-                productos.push(item.producto.id);
-                cantidades.push(item.cantidad);
-            });
-        
-            fetch('/finalizar_pago/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                body: JSON.stringify({
-                    carrito: carrito,  // Aquí envías todo el carrito como JSON
-                    metodo_pago: 'tarjeta',  // Ejemplo de método de pago, puedes ajustarlo según tus necesidades
-                    codigo_descuento: ''  // Ajusta según necesites manejar códigos de descuento
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert("Pago confirmado. Se descontará la cantidad de productos del stock.");
-                    localStorage.removeItem('carrito');
-                    location.reload();  // O redirige a otra página según tus necesidades
-                } else {
-                    alert("Error al procesar el pago.");
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        }
-        
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
+    // Función auxiliar para obtener el CSRF Token de las cookies
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Buscar el cookie con el nombre especificado
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
                 }
             }
-            return cookieValue;
         }
+        return cookieValue;
+    }
 
-    });
+    cargarCarrito();  // Asegúrate de cargar el carrito desde localStorage
+    añadirEventListeners();  // Añadir event listeners para los botones
 
-    
+    // También puedes añadir una llamada a enviarCarritoAlServidor aquí si es necesario
 });

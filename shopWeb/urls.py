@@ -11,8 +11,9 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('profile', views.profile, name='profile'),
-    path('carro_compras', views.carro_compras, name='carro_compras'),
+    path('carro_compras/', views.carro_compras, name='carro_compras'),
     path('procesar_pago/', views.procesar_pago, name='procesar_pago'),
+    path('guardar_carrito/', views.guardar_carrito, name='guardar_carrito'),
 
 # INFO GARDENIA 
     path('politicas', views.politicas, name='politicas'),
