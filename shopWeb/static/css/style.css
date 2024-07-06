@@ -23,6 +23,10 @@ body {
     flex-direction: column;
 }
 
+.grayscale {
+    filter: grayscale(100%);
+}
+
 .content {
     flex: 1;
 }
