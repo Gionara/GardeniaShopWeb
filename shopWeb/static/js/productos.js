@@ -143,6 +143,20 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    function vaciarCarrito() {
+        carrito = [];
+        localStorage.removeItem('carrito');
+        actualizarCarrito();
+        guardarCarrito();
+    }
+
+    document.getElementById('vaciar-carrito').addEventListener('click', function () {
+        console.log("vaciar-carrito btn click")
+        if (confirm('¿Estás seguro de que deseas vaciar el carrito?')) {
+            vaciarCarrito();
+        }
+    });
+
     function handleMenosButtonClick(event) {
         const btn = event.currentTarget;
         const productoId = btn.getAttribute('data-id');
@@ -207,7 +221,9 @@ document.addEventListener("DOMContentLoaded", function () {
         return cookieValue;
     }
 
+   
+
     cargarCarrito();
     actualizarCarrito();
 });
-//KJHGFDS
+//KJHGFDSsdasdas
