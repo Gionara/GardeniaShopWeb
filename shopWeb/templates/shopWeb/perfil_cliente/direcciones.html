@@ -1,0 +1,29 @@
+<!-- direcciones.html -->
+{% extends 'shopWeb/layouts/base.html' %}
+
+{% block title %} 🌸Gardenia - Direcciones 🌸 {% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Mis Direcciones</h2>
+    <a href="{% url 'agregar_direccion' %}" class="btn btn-primary mb-3">Agregar Nueva Dirección</a>
+    {% if direcciones.exists %}
+    <div class="list-group">
+        {% for direccion in direcciones %}
+        <div class="list-group-item">
+            <h6 class="mb-1">{{ direccion.nombre_dirreccion }}</h6>
+            <p class="mb-1">{{ direccion.direccion }}, {{ direccion.ciudad }}, {{ direccion.estado }}, {{ direccion.pais }}, {{ direccion.codigo_postal }}</p>
+            <p class="mb-1"><strong>Teléfono:</strong> {{ direccion.telefono }}</p>
+            <a href="{% url 'editar_direccion' direccion.id_direccion %}" class="btn btn-sm btn-warning">Editar</a>
+            <form action="{% url 'eliminar_direccion' direccion.id_direccion %}" method="POST" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No tienes direcciones guardadas. <a href="{% url 'agregar_direccion' %}">Agregar dirección de envío</a></p>
+    {% endif %}
+</div>
+{% endblock %}

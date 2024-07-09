@@ -1,0 +1,15 @@
+<!-- editar_direccion.html -->
+{% extends 'shopWeb/layouts/base.html' %}
+
+{% block title %} 🌸Gardenia - Editar Dirección 🌸 {% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Editar Dirección</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Actualizar Dirección</button>
+    </form>
+</div>
+{% endblock %}

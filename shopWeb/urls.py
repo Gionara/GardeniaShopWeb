@@ -15,11 +15,19 @@ urlpatterns = [
     path('procesar_pago/', views.procesar_pago, name='procesar_pago'),
     path('guardar_carrito/', views.guardar_carrito, name='guardar_carrito'),
 
+# CRUD DIRECCIONES
+
+    path('profile/direcciones/', views.direcciones, name='direcciones'),
+    path('profile/direcciones/agregar', views.agregar_direccion, name='agregar_direccion'),
+    path('profile/direcciones/editar/<int:direccion_id>', views.editar_direccion, name='editar_direccion'),
+    path('profile/direcciones/eliminar/<int:direccion_id>', views.eliminar_direccion, name='eliminar_direccion'),
+
+
 # INFO GARDENIA 
     path('politicas', views.politicas, name='politicas'),
     path('sobre_nosotros', views.sobre_nosotros, name='sobre_nosotros'),
    
-   # PRODUCTOS VISTAS
+# PRODUCTOS VISTAS
     path('productos/<str:categoria_nombre>/<str:subcategoria_nombre>/', views.productos_view, name='productos'),
     path('productos/', views.all_productos_view, name='productos'),
 
@@ -29,7 +37,7 @@ urlpatterns = [
     path('cat_insumos', views.cat_insumos, name='cat_insumos'),
    
    
-  #CRUD DE PRODUCTOS 
+#CRUD DE PRODUCTOS 
     path('admin/productos/', views.productos, name='productos_admin'),
     path('admin/productos/agregar', views.producto_nuevo, name='agregar_producto'),
     path('admin/productos/editar/<int:id>', views.producto_editar, name='editar_producto'),

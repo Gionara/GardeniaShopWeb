@@ -6,8 +6,8 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required,user_passes_test
-from .models import Producto, Categoria, SubCategoria
-from .forms import ProductoForm
+from .models import Producto, Categoria, SubCategoria, User_direccion
+from .forms import ProductoForm, DireccionForm
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.db import transaction
@@ -19,6 +19,10 @@ protected_urls = [
     '/shopWeb/admin/productos/agregar',
     '/shopWeb/admin/productos/editar/<int:id>',
     '/shopWeb/productos/eliminar/<int:id>',
+    '/shopWeb/profile/direcciones/',
+    '/shopWeb/profile/agregar',
+    '/shopWeb/profile/editar/<int:direccion_id>',
+    '/shopWeb/profile/eliminar_direccion/<int:direccion_id>',
 ]
 
 # Create your views here.
@@ -104,6 +108,7 @@ def sobre_nosotros(request):
 @login_required
 def profile(request):
     user = request.user
+    direcciones = User_direccion.objects.filter(user=request.user)
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
@@ -118,7 +123,46 @@ def profile(request):
     else:
         form = PasswordChangeForm(request.user)
 
-    return render(request, 'shopWeb/perfil_cliente/profile.html', {'user': user, 'form': form})
+    return render(request, 'shopWeb/perfil_cliente/profile.html', {'user': user, 'form': form, 'direcciones':direcciones})
+
+    #CRUD DIRECCIONES
+
+@login_required
+def direcciones(request):
+    direcciones = User_direccion.objects.filter(user=request.user)
+    return render(request, 'shopWeb/perfil_cliente/direcciones.html', {'direcciones': direcciones})
+
+@login_required
+def agregar_direccion(request):
+    form=DireccionForm(request.POST)
+    if form.is_valid():
+        direccion = form.save(commit=False)
+        direccion.user = request.user
+        direccion.save()
+        return redirect('direcciones')
+    else:
+        form = DireccionForm()
+    return render(request, 'shopWeb/perfil_cliente/agregar_direccion.html', {'form': form})
+
+@login_required
+def editar_direccion(request, direccion_id):
+    direccion = get_object_or_404(User_direccion, id_direccion=direccion_id, user=request.user)
+    if request.method == 'POST':
+        form = DireccionForm(request.POST, instance=direccion)
+        if form.is_valid():
+            form.save()
+            return redirect('direcciones')
+    else:
+        form = DireccionForm(instance=direccion)
+    return render(request, 'shopWeb/perfil_cliente/editar_direccion.html', {'form': form})
+
+@login_required
+def eliminar_direccion(request, direccion_id):
+    direccion = User_direccion.objects.get(id_direccion=direccion_id, user=request.user)
+    if request.method == 'POST':
+        direccion.delete()
+        return redirect('direcciones')
+    
 
 #CARRITO DE COMPRAS
 

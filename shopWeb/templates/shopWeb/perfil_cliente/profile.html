@@ -3,7 +3,7 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 
-{% block title %} 🌸Gardenia - Perfil 🌸 {% endblock %}
+{% block title %} 🌸Gardenia - Perfil 🌸 {% endblock %}.
 
 {% block content %}
 <div class="container mt-5">
@@ -12,11 +12,16 @@
         <div class="col-md-6">
             <h4>Datos Personales</h4>
             <ul class="list-group">
-                <li class="list-group-item"><strong>Nombre:</strong> {{ user.first_name }}</li>
-                <li class="list-group-item"><strong>Apellido:</strong> {{ user.last_name }}</li>
-                <li class="list-group-item"><strong>Correo Electrónico:</strong> {{ user.email }}</li>
+                <li class="list-group-item"><strong>Nombre:</strong> 
+                    {{user.first_name }}</li>
+                <li class="list-group-item"><strong>Apellido:</strong>
+                     {{ user.last_name }}</li>
+                <li class="list-group-item"><strong>Correo Electrónico:</strong>
+                    {{ request.user.email }}</li>
             </ul>
         </div>
+
+        <!-- CAMBIAR CONTRASEÑA -->
         <div class="col-md-6">
             <h4>Cambiar Contraseña</h4>
             <form id="password_change_form" method="POST">
@@ -26,21 +31,42 @@
                     <input type="password" name="old_password" id="id_old_password" autocomplete="current-password" required>
                     <small class="text-danger" id="old_password_error"></small>
                 </div>
-
+        
                 <div class="mb-3">
                     <label for="id_new_password1">Nueva Contraseña</label>
-                    <input type="password" name="new_password1" id="id_new_password1" autocomplete="new-password" required aria-describedby="id_new_password1_helptext">
+                    <input type="password" name="new_password1" id="id_new_password1" autocomplete="new-password" required>
                     <small class="text-danger" id="new_password1_error"></small>
                 </div>
-
+        
                 <div class="mb-3">
                     <label for="id_new_password2">Confirmar Nueva Contraseña</label>
-                    <input type="password" name="new_password2" id="id_new_password2" autocomplete="new-password" required aria-invalid="true">
+                    <input type="password" name="new_password2" id="id_new_password2" autocomplete="new-password" required>
                     <small class="text-danger" id="new_password2_error"></small>
                 </div>
-
+        
                 <button type="submit" class="btn btn-primary">Actualizar Contraseña</button>
             </form>
+        </div>
+        
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h4>Direcciones de Envío</h4>
+            {% if direcciones.exists %}
+            <div class="list-group">
+                {% for direccion in direcciones %}
+                <div class="list-group-item">
+                    <h6 class="mb-1">{{ direccion.nombre_dirreccion }}</h6>
+                    <p class="mb-1">{{ direccion.direccion }}, {{ direccion.ciudad }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>No tienes direcciones guardadas. <a href="{% url 'agregar_direccion' %}">Agregar dirección de envío</a></p>
+            {% endif %}
+            <a href="{% url 'direcciones' %}" class="btn btn-info">Gestionar
+                Direcciones</a>
         </div>
     </div>
 </div>
@@ -69,8 +95,6 @@ $(document).ready(function() {
             $('#old_password_error').text('Este campo es requerido.');
             isValid = false;
         }
-        
-
 
         // Check if new passwords match
         if (newPassword1 !== newPassword2) {

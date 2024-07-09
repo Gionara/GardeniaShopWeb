@@ -32,9 +32,10 @@ class Producto(models.Model):
 class User_direccion(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     id_direccion=models.AutoField(primary_key=True)
+    nombre_dirreccion= models.CharField( max_length=100, default='Dirrección de envio')
     direccion = models.CharField(max_length=100)
     ciudad = models.CharField(max_length=100)
-    estado = models.CharField(max_length=100)
+    region = models.CharField(max_length=100)
     codigo_postal = models.CharField(max_length=100)
     pais = models.CharField(max_length=100)
     telefono = models.CharField(max_length=100)
