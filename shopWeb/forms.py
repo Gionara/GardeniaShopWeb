@@ -1,5 +1,5 @@
 from django import forms
-from .models import Producto, User_direccion
+from .models import Producto, User_direccion, Suscripcion
 
 class ProductoForm(forms.ModelForm):
     class Meta:
@@ -49,3 +49,18 @@ class DireccionForm(forms.ModelForm):
             'telefono': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
+
+
+class SuscripcionForm(forms.ModelForm):
+    monto_otro = forms.DecimalField(label='Escribe el monto', required=False, min_value=5000, max_digits=10, decimal_places=0)
+
+    class Meta:
+        model = Suscripcion
+        fields = ['monto_elegido', 'duracion', 'monto_otro']
+        labels = {
+            'monto_elegido': 'Monto de la suscripción',
+            'duracion': 'Duración en meses',
+        }
+        widgets = {
+            'monto_elegido': forms.Select(choices=Suscripcion.MONTOS_OPCIONES),
+        }

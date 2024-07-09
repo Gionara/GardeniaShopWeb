@@ -48,6 +48,22 @@
             </form>
         </div>
         
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <h4>Suscripción</h4>
+                <div class="suscripcion-section">
+                    {% if suscripcion %}
+                        <p>Estas suscrito en apoyo a la Fundación Niños por Chile.</p>
+                        <a href="{% url 'suscripcion' %}" class="btn btn-primary">Ver Suscripción</a>
+                    {% else %}
+                        <p>Aún no estás suscrito. Ayuda a la Fundación Niños por Chile suscribiéndote.</p>
+                        <a href="{% url 'suscripcion' %}" class="btn btn-primary">Suscribirse</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
     </div>
 
     <div class="row mt-5">

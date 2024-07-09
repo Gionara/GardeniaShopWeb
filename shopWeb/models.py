@@ -43,6 +43,23 @@ class User_direccion(models.Model):
     def __str__(self):
         return self.user.username
 
+class Suscripcion(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    monto = models.DecimalField(max_digits=10, decimal_places=0, null=True, blank=True)
+    duracion = models.IntegerField()
+    fecha_inicio = models.DateTimeField(auto_now_add=True)
+    fecha_fin = models.DateTimeField(null=True, blank=True)
+    monto_elegido = models.DecimalField(max_digits=10, decimal_places=0, null=True, blank=True)
+
+    MONTOS_OPCIONES = (
+        (5000, '5000 pesos'),
+        (10000, '10000 pesos'),
+        (15000, '15000 pesos'),
+        ('otro', 'Otro monto'),
+    )
+
+
+    
 class Pedido(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     id_pedido = models.AutoField(primary_key=True)

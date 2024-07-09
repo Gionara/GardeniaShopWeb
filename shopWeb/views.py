@@ -6,11 +6,13 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required,user_passes_test
-from .models import Producto, Categoria, SubCategoria, User_direccion
-from .forms import ProductoForm, DireccionForm
+from .models import Producto, Categoria, SubCategoria, User_direccion, Suscripcion
+from .forms import ProductoForm, DireccionForm, SuscripcionForm
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.db import transaction
+from .services import registrar_suscriptor, eliminar_suscriptor, consultar_vigencia
+
 
 # List of URLs that require authentication
 protected_urls = [
@@ -104,11 +106,11 @@ def sobre_nosotros(request):
 
 
 #PERFIL 
-
-@login_required
 def profile(request):
     user = request.user
     direcciones = User_direccion.objects.filter(user=request.user)
+    suscripcion = Suscripcion.objects.filter(user=user).first()
+    
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
@@ -123,9 +125,17 @@ def profile(request):
     else:
         form = PasswordChangeForm(request.user)
 
-    return render(request, 'shopWeb/perfil_cliente/profile.html', {'user': user, 'form': form, 'direcciones':direcciones})
+    context = {
+        'user': user,
+        'form': form,
+        'direcciones': direcciones,
+        'suscripcion': suscripcion
+    }
+    
+    return render(request, 'shopWeb/perfil_cliente/profile.html', context)
 
-    #CRUD DIRECCIONES
+
+# PERFIL - CRUD DIRECCIONES
 
 @login_required
 def direcciones(request):
@@ -163,6 +173,56 @@ def eliminar_direccion(request, direccion_id):
         direccion.delete()
         return redirect('direcciones')
     
+# PERFIL - SUSCRIPCIÓN
+
+
+@login_required
+def suscripcion_view(request):
+    user = request.user
+    suscripcion = Suscripcion.objects.filter(user=user).first()
+
+    if request.method == 'POST':
+        form = SuscripcionForm(request.POST, instance=suscripcion)
+        if form.is_valid():
+            monto_elegido = form.cleaned_data['monto_elegido']
+            duracion = form.cleaned_data['duracion']
+            
+            if monto_elegido == 'otro':
+                monto_otro = form.cleaned_data['monto_otro']
+                suscripcion = Suscripcion.objects.create(user=user, monto=monto_otro, duracion=duracion)
+            else:
+                suscripcion = Suscripcion.objects.create(user=user, monto=monto_elegido, duracion=duracion)
+
+            # Simular llamada a la función de registro de suscriptor
+            result = registrar_suscriptor(user, suscripcion.monto, suscripcion.duracion)
+            if result["success"]:
+                messages.success(request, "Suscripción actualizada exitosamente.")
+            else:
+                messages.error(request, result["message"])  # Mostrar mensaje de error
+
+            return redirect('profile')
+    else:
+        form = SuscripcionForm(instance=suscripcion)
+
+    return render(request, 'shopWeb/perfil_cliente/suscripcion.html', {'form': form, 'suscripcion': suscripcion})
+
+
+@login_required
+def cancelar_suscripcion(request):
+    user = request.user
+    suscripcion = Suscripcion.objects.filter(user=user).first()
+
+    if suscripcion:
+        # Simular llamada a la función de eliminar suscriptor
+        result = eliminar_suscriptor(user)
+        if result["success"]:
+            suscripcion.delete()
+            messages.success(request, "Suscripción cancelada exitosamente.")
+        else:
+            messages.error(request, result["message"])  # Mostrar mensaje de error
+
+    return redirect('profile')
+
 
 #CARRITO DE COMPRAS
 
@@ -267,7 +327,6 @@ def all_productos_view(request):
 def cat_herramientas(request):
     return render(request, 'shopWeb/productos/cat_herramientas.html')
 
-
 def cat_plantas(request):
     return render(request, 'shopWeb/productos/cat_plantas.html')
 
@@ -276,7 +335,6 @@ def cat_insumos(request):
 
 
 # CRUD PRODUCTOS
-
 
 def get_subcategorias(request, categoria_id):
     subcategorias = list(SubCategoria.objects.filter(categoria_id=categoria_id).values('subcategoria_id', 'subcategoria_nombre'))
@@ -290,7 +348,6 @@ def productos(request):
 
 @login_required
 @user_passes_test(es_admin)
-
 def producto_nuevo(request):
     if request.method == 'POST':
         form = ProductoForm(request.POST, request.FILES)

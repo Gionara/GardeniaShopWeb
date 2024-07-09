@@ -22,6 +22,10 @@ urlpatterns = [
     path('profile/direcciones/editar/<int:direccion_id>', views.editar_direccion, name='editar_direccion'),
     path('profile/direcciones/eliminar/<int:direccion_id>', views.eliminar_direccion, name='eliminar_direccion'),
 
+# SUSCRIPCIONES
+
+    path('profile/suscripcion/', views.suscripcion_view, name='suscripcion'),
+    path('profile/cancelar_suscripcion/', views.cancelar_suscripcion, name='cancelar_suscripcion'),
 
 # INFO GARDENIA 
     path('politicas', views.politicas, name='politicas'),
