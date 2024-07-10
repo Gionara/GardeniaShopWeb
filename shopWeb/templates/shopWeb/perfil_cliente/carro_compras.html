@@ -6,17 +6,7 @@
 {% block title %}🌸Gardenia - Carro de compras 🌸{% endblock %}
 
 {% block content %}
-<p>AAAAAAAAAAAAAAAAAAAAAAAA</p>
 
-<!-- Mostrar productos del carrito cargados desde el servidor -->
-{% for item in productos_carrito %}
-<div class="carrito-item">
-    <img src="{{ item.producto.imagen }}" alt="{{ item.producto.nombre }}">
-    <div>{{ item.producto.nombre }}</div>
-    <div>{{ item.producto.precio }}</div>
-    <div>Cantidad: {{ item.cantidad }}</div>
-</div>
-{% endfor %}
 
 <div class="container mt-5">
     <h2>Carro de Compras</h2>
