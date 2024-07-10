@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+from dateutil.relativedelta import relativedelta  # Importa relativedelta
 
 class Categoria(models.Model):
     categoria_id = models.AutoField(primary_key=True)
@@ -43,13 +45,15 @@ class User_direccion(models.Model):
     def __str__(self):
         return self.user.username
 
+
 class Suscripcion(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     monto = models.DecimalField(max_digits=10, decimal_places=0, null=True, blank=True)
-    duracion = models.IntegerField()
+    duracion = models.IntegerField()  # Duración en meses
     fecha_inicio = models.DateTimeField(auto_now_add=True)
     fecha_fin = models.DateTimeField(null=True, blank=True)
     monto_elegido = models.DecimalField(max_digits=10, decimal_places=0, null=True, blank=True)
+    activa = models.BooleanField(default=True)
 
     MONTOS_OPCIONES = (
         (5000, '5000 pesos'),
@@ -58,8 +62,24 @@ class Suscripcion(models.Model):
         ('otro', 'Otro monto'),
     )
 
+    def __str__(self):
+        return f"Suscripción de {self.user.username} - Monto: {self.monto} - Duración: {self.duracion} meses"
 
-    
+    def save(self, *args, **kwargs):
+        # Si la duración está definida y no tiene fecha de inicio, asignar fecha de inicio actual
+        if not self.fecha_inicio:
+            self.fecha_inicio = timezone.now()
+
+        # Llamar al método save original
+        super(Suscripcion, self).save(*args, **kwargs)
+
+        # Calcular la fecha de fin usando relativedelta
+        if self.duracion:
+            self.fecha_fin = self.fecha_inicio + relativedelta(months=self.duracion)
+
+        # Guardar nuevamente para actualizar la fecha de fin
+        super(Suscripcion, self).save(*args, **kwargs)
+
 class Pedido(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     id_pedido = models.AutoField(primary_key=True)

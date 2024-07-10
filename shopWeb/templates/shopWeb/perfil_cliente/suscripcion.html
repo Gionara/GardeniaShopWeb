@@ -1,3 +1,4 @@
+<!-- suscripcion.html -->
 {% extends 'shopWeb/layouts/base.html' %}
 {% block content %}
 <div class="container mt-5">
@@ -51,17 +52,19 @@
                 const montoElegido = document.getElementById('id_monto_elegido');
                 const montoOtroWrapper = document.getElementById('monto_otro_wrapper');
 
-                montoElegido.addEventListener('change', function() {
+                if (montoElegido) {
+                    montoElegido.addEventListener('change', function() {
+                        if (montoElegido.value === 'otro') {
+                            montoOtroWrapper.style.display = 'block';
+                        } else {
+                            montoOtroWrapper.style.display = 'none';
+                        }
+                    });
+
+                    // Mostrar inicialmente el campo de monto personalizado si se seleccionó "Otro monto"
                     if (montoElegido.value === 'otro') {
                         montoOtroWrapper.style.display = 'block';
-                    } else {
-                        montoOtroWrapper.style.display = 'none';
                     }
-                });
-
-                // Mostrar inicialmente el campo de monto personalizado si se seleccionó "Otro monto"
-                if (montoElegido.value === 'otro') {
-                    montoOtroWrapper.style.display = 'block';
                 }
             });
         </script>
@@ -75,5 +78,6 @@
             <button type="submit" class="btn btn-danger">Cancelar suscripción</button>
         </form>
     {% endif %}
+
 </div>
 {% endblock %}

@@ -51,16 +51,27 @@ class DireccionForm(forms.ModelForm):
 
 
 
-class SuscripcionForm(forms.ModelForm):
-    monto_otro = forms.DecimalField(label='Escribe el monto', required=False, min_value=5000, max_digits=10, decimal_places=0)
 
-    class Meta:
-        model = Suscripcion
-        fields = ['monto_elegido', 'duracion', 'monto_otro']
-        labels = {
-            'monto_elegido': 'Monto de la suscripción',
-            'duracion': 'Duración en meses',
-        }
-        widgets = {
-            'monto_elegido': forms.Select(choices=Suscripcion.MONTOS_OPCIONES),
-        }
+
+class SuscripcionForm(forms.Form):
+    MONTO_CHOICES = [
+        (5000, '5000 CLP'),
+        (10000, '10000 CLP'),
+        (15000, '15000 CLP'),
+        ('otro', 'Otro monto'),
+    ]
+
+    monto_elegido = forms.ChoiceField(choices=MONTO_CHOICES, required=True)
+    monto_otro = forms.IntegerField(required=False, min_value=5000)
+    duracion = forms.IntegerField(required=True, min_value=1, label="Duración (meses)")
+
+    def clean(self):
+        cleaned_data = super().clean()
+        monto_elegido = cleaned_data.get('monto_elegido')
+        monto_otro = cleaned_data.get('monto_otro')
+
+        if monto_elegido == 'otro' and not monto_otro:
+            self.add_error('monto_otro', 'Debe ingresar un monto personalizado')
+        elif monto_elegido == 'otro' and monto_otro < 5000:
+            self.add_error('monto_otro', 'El monto personalizado debe ser al menos 5000 CLP')
+        return cleaned_data

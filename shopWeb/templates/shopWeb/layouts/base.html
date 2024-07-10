@@ -30,6 +30,18 @@
         <!-- Off-canvas Carrito -->
         {% include 'shopWeb/layouts/offcanvas_carrito.html' %}
 
+
+         <!-- Muestra mensajes de Django -->
+        {% if messages %}
+            <div class="container mt-3">
+                {% for message in messages %}
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+       {% endif %} }
+
         <!--SCRIPT IMPORT-->
         <script src="{% static 'js/productos.js' %}"></script>
         <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>

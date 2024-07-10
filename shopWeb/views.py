@@ -199,7 +199,8 @@ def suscripcion(request):
                     user=usuario, monto=monto_donacion, duracion=duracion_suscripcion)
                 suscripcion_nueva.save()
 
-            return JsonResponse({'error': False, 'message': 'Suscripción actualizada correctamente.'})
+            messages.success(request, 'Suscripción actualizada correctamente.')
+            return redirect('suscripcion')
     else:
         form = SuscripcionForm()
 
@@ -208,6 +209,8 @@ def suscripcion(request):
         'form': form
     }
     return render(request, 'shopWeb/perfil_cliente/suscripcion.html', context)
+
+
 
 @csrf_exempt
 def rest_simulado_suscripcion(request):

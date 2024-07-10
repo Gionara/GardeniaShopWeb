@@ -24,8 +24,9 @@ urlpatterns = [
 
 # SUSCRIPCIONES
 
-    path('profile/suscripcion/', views.suscripcion_view, name='suscripcion'),
+    path('profile/suscripcion/', views.suscripcion, name='suscripcion'),
     path('profile/cancelar_suscripcion/', views.cancelar_suscripcion, name='cancelar_suscripcion'),
+    path('rest/simulacion/suscripcion/', views.rest_simulado_suscripcion, name='rest_simulado_suscripcion'),
 
 # INFO GARDENIA 
     path('politicas', views.politicas, name='politicas'),
