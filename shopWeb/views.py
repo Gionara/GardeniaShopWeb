@@ -6,7 +6,7 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required,user_passes_test
-from .models import Producto, Categoria, SubCategoria, User_direccion, Suscripcion
+from .models import Suscripcion, Producto, Categoria, SubCategoria, User_direccion, Suscripcion
 from .forms import ProductoForm, DireccionForm, SuscripcionForm
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -175,37 +175,74 @@ def eliminar_direccion(request, direccion_id):
     
 # PERFIL - SUSCRIPCIÓN
 
-
 @login_required
-def suscripcion_view(request):
-    user = request.user
-    suscripcion = Suscripcion.objects.filter(user=user).first()
+def suscripcion(request):
+    usuario = request.user
+    suscripcion_actual = Suscripcion.objects.filter(user=usuario, activa=True).first()
 
     if request.method == 'POST':
-        form = SuscripcionForm(request.POST, instance=suscripcion)
+        form = SuscripcionForm(request.POST)
         if form.is_valid():
-            monto_elegido = form.cleaned_data['monto_elegido']
-            duracion = form.cleaned_data['duracion']
-            
-            if monto_elegido == 'otro':
-                monto_otro = form.cleaned_data['monto_otro']
-                suscripcion = Suscripcion.objects.create(user=user, monto=monto_otro, duracion=duracion)
-            else:
-                suscripcion = Suscripcion.objects.create(user=user, monto=monto_elegido, duracion=duracion)
+            monto_donacion = form.cleaned_data.get('monto_elegido')
+            duracion_suscripcion = form.cleaned_data.get('duracion')
+            monto_otro = form.cleaned_data.get('monto_otro')
 
-            # Simular llamada a la función de registro de suscriptor
-            result = registrar_suscriptor(user, suscripcion.monto, suscripcion.duracion)
-            if result["success"]:
-                messages.success(request, "Suscripción actualizada exitosamente.")
-            else:
-                messages.error(request, result["message"])  # Mostrar mensaje de error
+            if monto_donacion == 'otro':
+                monto_donacion = monto_otro
 
-            return redirect('profile')
+            if suscripcion_actual:
+                suscripcion_actual.monto = monto_donacion
+                suscripcion_actual.duracion = duracion_suscripcion
+                suscripcion_actual.save()
+            else:
+                suscripcion_nueva = Suscripcion(
+                    user=usuario, monto=monto_donacion, duracion=duracion_suscripcion)
+                suscripcion_nueva.save()
+
+            return JsonResponse({'error': False, 'message': 'Suscripción actualizada correctamente.'})
     else:
-        form = SuscripcionForm(instance=suscripcion)
+        form = SuscripcionForm()
 
-    return render(request, 'shopWeb/perfil_cliente/suscripcion.html', {'form': form, 'suscripcion': suscripcion})
+    context = {
+        'suscripcion': suscripcion_actual,
+        'form': form
+    }
+    return render(request, 'shopWeb/perfil_cliente/suscripcion.html', context)
 
+@csrf_exempt
+def rest_simulado_suscripcion(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        accion = data.get('accion')
+        usuario_id = data.get('usuario_id')
+
+        if accion == 'ingresar_suscriptores':
+            # Simular ingreso de suscriptores
+            usuario = get_object_or_404(User, pk=usuario_id)
+            suscripcion_nueva = Suscripcion(user=usuario)
+            suscripcion_nueva.save()
+            return JsonResponse({'message': 'Suscriptor ingresado correctamente.'})
+
+        elif accion == 'eliminar_suscriptores':
+            # Simular eliminación de suscriptores
+            usuario = get_object_or_404(User, pk=usuario_id)
+            suscripcion = Suscripcion.objects.filter(user=usuario).first()
+            if suscripcion:
+                suscripcion.delete()
+                return JsonResponse({'message': 'Suscripción eliminada correctamente.'})
+            else:
+                return JsonResponse({'message': 'El usuario no tiene suscripción activa.'})
+
+        elif accion == 'consultar_vigencia':
+            # Simular consulta de vigencia de suscripción
+            usuario = get_object_or_404(User, pk=usuario_id)
+            suscripcion = Suscripcion.objects.filter(user=usuario, activa=True).first()
+            if suscripcion:
+                return JsonResponse({'message': f'El usuario está suscrito hasta {suscripcion.fecha_fin}.'})
+            else:
+                return JsonResponse({'message': 'El usuario no tiene suscripción activa.'})
+
+    return JsonResponse({'error': True, 'message': 'Método no permitido.'})
 
 @login_required
 def cancelar_suscripcion(request):
@@ -215,13 +252,23 @@ def cancelar_suscripcion(request):
     if suscripcion:
         # Simular llamada a la función de eliminar suscriptor
         result = eliminar_suscriptor(user)
-        if result["success"]:
+        if result.get("success"):
             suscripcion.delete()
             messages.success(request, "Suscripción cancelada exitosamente.")
         else:
-            messages.error(request, result["message"])  # Mostrar mensaje de error
+            messages.error(request, result.get("message", "Error al cancelar la suscripción."))  # Mostrar mensaje de error
 
     return redirect('profile')
+
+def eliminar_suscriptor(user):
+    # Simulación de eliminación de suscriptor
+    # Aquí puedes implementar la lógica para eliminar el suscriptor, por ejemplo, llamar a un servicio externo.
+    # Retorna un diccionario con la clave "success".
+    try:
+        # Simulación de eliminación exitosa
+        return {"success": True}
+    except Exception as e:
+        return {"success": False, "message": str(e)}
 
 
 #CARRITO DE COMPRAS
