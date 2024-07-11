@@ -1,21 +1,39 @@
-<!-- suscripcion.html -->
 {% extends 'shopWeb/layouts/base.html' %}
 {% block content %}
 <div class="container mt-5">
     <h2>Suscripción</h2>
-    
+
     {% if suscripcion %}
+        {% if suscripcion.activa %}
         <div class="alert alert-info">
             <p>Estás suscrito en apoyo a la Fundación Niños por Chile.</p>
             <p>Monto: {{ suscripcion.monto }} CLP</p>
             <p>Duración: {{ suscripcion.duracion }} meses</p>
             <p>Fecha de inicio: {{ suscripcion.fecha_inicio }}</p>
             {% if suscripcion.fecha_fin %}
-                <p>Fecha de fin: {{ suscripcion.fecha_fin }}</p>
+            <p>Fecha de fin: {{ suscripcion.fecha_fin }}</p>
             {% else %}
-                <p>Fecha de fin: No definida</p>
+            <p>Fecha de fin: No definida</p>
             {% endif %}
         </div>
+        <form method="post" action="{% url 'cancelar_suscripcion' %}" class="mt-3" onsubmit="return confirmCancel();">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Cancelar suscripción</button>
+        </form>
+        {% else %}
+        <div class="alert alert-warning">
+            <p>Tu suscripción está inactiva.</p>
+            <p>Último monto de donación: {{ suscripcion.monto }} CLP</p>
+            <p>Duración de la suscripción: {{ suscripcion.duracion }} meses</p>
+            <p>Fecha de inicio: {{ suscripcion.fecha_inicio }}</p>
+            <p>Fecha de fin: {{ suscripcion.fecha_fin }}</p>
+            <p>Puedes suscribirte nuevamente utilizando el formulario a continuación.</p>
+        </div>
+        {% endif %}
+    {% else %}
+    <div class="alert alert-info">
+        <p>Aún no tienes una suscripción activa. Apoya a la Fundación Niños por Chile suscribiéndote a continuación.</p>
+    </div>
     {% endif %}
 
     <form method="post">
@@ -24,60 +42,54 @@
             <label for="id_monto_elegido">Monto de la suscripción</label>
             {{ form.monto_elegido }}
             {% if form.monto_elegido.errors %}
-                <div class="text-danger">{{ form.monto_elegido.errors }}</div>
+            <div class="text-danger">{{ form.monto_elegido.errors }}</div>
             {% endif %}
         </div>
         <div class="form-group">
             <label for="id_duracion">Duración de la suscripción (en meses)</label>
             {{ form.duracion }}
             {% if form.duracion.errors %}
-                <div class="text-danger">{{ form.duracion.errors }}</div>
+            <div class="text-danger">{{ form.duracion.errors }}</div>
             {% endif %}
         </div>
 
-        <!-- Mostrar campo para monto personalizado solo si se selecciona "Otro monto" -->
         <div id="monto_otro_wrapper" style="display: none;">
             <div class="form-group" id="id_monto_otro_wrapper">
                 <label for="id_monto_otro">Monto personalizado (mínimo 5000 CLP)</label>
                 {{ form.monto_otro }}
                 {% if form.monto_otro.errors %}
-                    <div class="text-danger">{{ form.monto_otro.errors }}</div>
+                <div class="text-danger">{{ form.monto_otro.errors }}</div>
                 {% endif %}
             </div>
         </div>
 
-        <!-- JavaScript para mostrar/ocultar el campo de monto personalizado según selección -->
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const montoElegido = document.getElementById('id_monto_elegido');
-                const montoOtroWrapper = document.getElementById('monto_otro_wrapper');
-
-                if (montoElegido) {
-                    montoElegido.addEventListener('change', function() {
-                        if (montoElegido.value === 'otro') {
-                            montoOtroWrapper.style.display = 'block';
-                        } else {
-                            montoOtroWrapper.style.display = 'none';
-                        }
-                    });
-
-                    // Mostrar inicialmente el campo de monto personalizado si se seleccionó "Otro monto"
-                    if (montoElegido.value === 'otro') {
-                        montoOtroWrapper.style.display = 'block';
-                    }
-                }
-            });
-        </script>
-
         <button type="submit" class="btn btn-primary">Guardar cambios</button>
     </form>
 
-    {% if suscripcion %}
-        <form method="post" action="{% url 'cancelar_suscripcion' %}" class="mt-3">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Cancelar suscripción</button>
-        </form>
-    {% endif %}
-
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const montoElegido = document.getElementById('id_monto_elegido');
+        const montoOtroWrapper = document.getElementById('monto_otro_wrapper');
+
+        if (montoElegido) {
+            montoElegido.addEventListener('change', function() {
+                if (montoElegido.value === 'otro') {
+                    montoOtroWrapper.style.display = 'block';
+                } else {
+                    montoOtroWrapper.style.display = 'none';
+                }
+            });
+
+            if (montoElegido.value === 'otro') {
+                montoOtroWrapper.style.display = 'block';
+            }
+        }
+    });
+
+    function confirmCancel() {
+        return confirm("¿Estás seguro de que deseas cancelar tu suscripción?");
+    }
+</script>
 {% endblock %}

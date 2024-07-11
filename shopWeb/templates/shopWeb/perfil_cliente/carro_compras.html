@@ -6,8 +6,6 @@
 {% block title %}🌸Gardenia - Carro de compras 🌸{% endblock %}
 
 {% block content %}
-
-
 <div class="container mt-5">
     <h2>Carro de Compras</h2>
     <main>
@@ -15,14 +13,10 @@
             <div class="row justify-content-end">
                 <div class="col-lg-6 col-md-8">
                     <h4>Productos</h4>
-                    <!-- Aquí se actualizará el carrito con JavaScript -->
                     <div id="carrito-container"></div>
-                    <div
-                        class="d-grid gap-2 d-md-flex justify-content-md-center">
-                        <button class="btn btn-outline-danger mt-3"
-                            id="vaciar-carrito">
-                            <h6><i class="bi bi-trash3-fill"></i> Vaciar
-                                Carrito</h6>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <button class="btn btn-outline-danger mt-3" id="vaciar-carrito">
+                            <h6><i class="bi bi-trash3-fill"></i> Vaciar Carrito</h6>
                         </button>
                     </div>
                 </div>
@@ -34,16 +28,30 @@
                     <div id="cantidad-total"></div>
                     <br>
 
+                    <!-- Código de descuento -->
+                    {% if request.user.is_authenticated %}
+                        <div class="form-group">
+                            <label for="codigo-descuento">Código de Descuento:</label>
+                            <input type="text" id="codigo-descuento" class="form-control">
+                            <button class="btn btn-primary mt-2" id="aplicar-descuento">Aplicar Código</button>
+                        </div>
+
+                        <!-- Mostrar el descuento de suscripción -->
+                        {% if descuento_suscripcion %}
+                        <p>Descuento por suscripción: <span id="descuentoSuscripcion">{{ descuento_suscripcion }}</span>%</p>
+                        {% endif %}
+                    {% endif %}
+
+                    <!-- Mostrar el total con los descuentos aplicados -->
+                    <p>Total con descuento: <span id="totalDescuento"></span></p>
+
                     {% if request.user.is_authenticated %}
                     <div class="d-grid gap-2 col-6 mx-auto">
-                        <button class="btn btn-success mt-3 btn-lg"
-                            id="pagar-carrito">Pagar Productos</button>
+                        <button class="btn btn-success mt-3 btn-lg" id="pagar-carrito">Pagar Productos</button>
                     </div>
                     {% else %}
                     <div class="d-grid gap-2 col-6 mx-auto">
-                        <button class="btn btn-success mt-3 btn-lg"
-                            id="sing-in-pago">Inicia sesión para pagar
-                            productos</button>
+                        <button class="btn btn-success mt-3 btn-lg" id="sing-in-pago">Inicia sesión para pagar productos</button>
                     </div>
                     {% endif %}
                 </div>
@@ -53,30 +61,28 @@
 </div>
 
 <!-- Modal de Confirmación de Pago -->
-<div class="modal fade" id="modalConfirmarPago" tabindex="-1"
-    aria-labelledby="modalConfirmarPagoLabel" aria-hidden="true">
+<div class="modal fade" id="modalConfirmarPago" tabindex="-1" aria-labelledby="modalConfirmarPagoLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-dark">
-                <h5 class="modal-title" id="modalConfirmarPagoLabel">Confirmar
-                    Pago</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
+                <h5 class="modal-title" id="modalConfirmarPagoLabel">Confirmar Pago</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <p>¿Estás seguro de que deseas realizar el pago?</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary"
-                    data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success"
-                    id="confirmar-pago">Confirmar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" id="confirmar-pago">Confirmar</button>
             </div>
         </div>
     </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    const descuentoSuscripcion = '{{ descuento_suscripcion|default:0 }}' ;
+</script>
 <script>
     $(document).ready(function() {
         $('#pagar-carrito').on('click', function() {

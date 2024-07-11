@@ -14,6 +14,8 @@ urlpatterns = [
     path('carro_compras/', views.carro_compras, name='carro_compras'),
     path('procesar_pago/', views.procesar_pago, name='procesar_pago'),
     path('guardar_carrito/', views.guardar_carrito, name='guardar_carrito'),
+    path('aplicar_cupon/', views.aplicar_cupon, name='aplicar_cupon'),
+
 
 # CRUD DIRECCIONES
 
@@ -48,6 +50,13 @@ urlpatterns = [
     path('admin/productos/editar/<int:id>', views.producto_editar, name='editar_producto'),
     path('admin/productos/eliminar/<int:id>', views.producto_eliminar, name='eliminar_producto'),
     path('get_subcategorias/<int:categoria_id>/', views.get_subcategorias, name='get_subcategorias'),
+
+
+#CRUD DE CUPONES
+    path('admin/gestion_cupones/', views.gestion_cupones, name='gestion_cupones'),
+    path('admin/cupones/agregar', views.cupon_nuevo, name='agregar_cupon'),
+    path('admin/cupones/editar/<int:id>', views.cupon_editar, name='editar_cupon'),
+    path('admin/cupones/eliminar/<int:id>', views.cupon_eliminar, name='eliminar_cupon'),
 ]
 
 

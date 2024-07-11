@@ -1,0 +1,38 @@
+{% extends 'shopWeb/layouts/base.html' %}
+{% load static %}
+
+
+{% block title %} Crear Cupon {% endblock %}
+
+{% block content %}
+
+
+<div class="container">
+    <h1>Crear Cupon</h1>
+    <form method="POST" enctype="multipart/form-data" id="producto_form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="codigo">Codigo</label>
+            <input type="text" class="form-control" id="codigo" name="codigo">
+        </div>
+        <div class="form-group">
+            <label for="descuento">Descuento</label>
+            <input type="number" class="form-control" id="descuento" name="descuento">
+        </div>
+        <div class="form-group">
+            <label for="fecha_inicio">Fecha Inicio</label>
+            <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio">
+        </div>
+        <div class="form-group">
+            <label for="fecha_fin">Fecha Fin</label>
+            <input type="date" class="form-control" id="fecha_fin" name="fecha_fin">
+        </div>
+        <button type="submit" class="btn btn-primary">Crear</button>
+    </form>
+</div>
+
+<!-- Include jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+{% endblock %}

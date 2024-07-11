@@ -52,7 +52,7 @@
             <div class="col-md-12">
                 <h4>Suscripción</h4>
                 <div class="suscripcion-section">
-                    {% if suscripcion %}
+                    {% if suscripcion  and suscripcion.activa%}
                         <p>Estas suscrito en apoyo a la Fundación Niños por Chile.</p>
                         <a href="{% url 'suscripcion' %}" class="btn btn-primary">Ver Suscripción</a>
                     {% else %}
@@ -60,10 +60,13 @@
                         <a href="{% url 'suscripcion' %}" class="btn btn-primary">Suscribirse</a>
                     {% endif %}
                 </div>
-            </div>
-        </div>
-    </div>
 
+                {% if suscripcion %}
+                    <p>Estado de la suscripción: {{ suscripcion.activa }}</p>
+                {% endif %}
+
+            </div>            
+        </div>
     </div>
 
     <div class="row mt-5">

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Producto, User_direccion, Suscripcion
+from .models import Producto, User_direccion,Cupon, Suscripcion
 
 class ProductoForm(forms.ModelForm):
     class Meta:
@@ -49,9 +49,23 @@ class DireccionForm(forms.ModelForm):
             'telefono': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
-
-
-
+class CuponForm(forms.ModelForm):
+    class Meta:
+        model = Cupon
+        fields = '__all__'
+        exclude = ['id_cupon']  # Puedes excluir el campo 'id_cupon' si no deseas que se muestre en el formulario
+        labels = {
+            'codigo': 'Código',
+            'descuento': 'Descuento (%)',
+            'fecha_inicio': 'Fecha de inicio',
+            'fecha_fin': 'Fecha de término',
+        }
+        widgets = {
+            'codigo': forms.TextInput(attrs={'class': 'form-control'}),
+            'descuento': forms.NumberInput(attrs={'class': 'form-control'}),
+            'fecha_inicio': forms.DateInput(attrs={'class': 'form-control'}),
+            'fecha_fin': forms.DateInput(attrs={'class': 'form-control'}),
+        }
 
 class SuscripcionForm(forms.Form):
     MONTO_CHOICES = [
@@ -75,3 +89,4 @@ class SuscripcionForm(forms.Form):
         elif monto_elegido == 'otro' and monto_otro < 5000:
             self.add_error('monto_otro', 'El monto personalizado debe ser al menos 5000 CLP')
         return cleaned_data
+

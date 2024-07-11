@@ -33,7 +33,7 @@ class Producto(models.Model):
 
 class User_direccion(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    id_direccion=models.AutoField(primary_key=True)
+    id_direccion = models.AutoField(primary_key=True)
     nombre_dirreccion= models.CharField( max_length=100, default='Dirrección de envio')
     direccion = models.CharField(max_length=100)
     ciudad = models.CharField(max_length=100)
@@ -52,8 +52,7 @@ class Suscripcion(models.Model):
     duracion = models.IntegerField()  # Duración en meses
     fecha_inicio = models.DateTimeField(auto_now_add=True)
     fecha_fin = models.DateTimeField(null=True, blank=True)
-    monto_elegido = models.DecimalField(max_digits=10, decimal_places=0, null=True, blank=True)
-    activa = models.BooleanField(default=True)
+    activa = models.BooleanField(default=False)
 
     MONTOS_OPCIONES = (
         (5000, '5000 pesos'),
@@ -66,20 +65,28 @@ class Suscripcion(models.Model):
         return f"Suscripción de {self.user.username} - Monto: {self.monto} - Duración: {self.duracion} meses"
 
     def save(self, *args, **kwargs):
-        # Si la duración está definida y no tiene fecha de inicio, asignar fecha de inicio actual
+        # Asignar fecha de inicio actual si no está definida
         if not self.fecha_inicio:
             self.fecha_inicio = timezone.now()
-
-        # Llamar al método save original
-        super(Suscripcion, self).save(*args, **kwargs)
 
         # Calcular la fecha de fin usando relativedelta
         if self.duracion:
             self.fecha_fin = self.fecha_inicio + relativedelta(months=self.duracion)
 
-        # Guardar nuevamente para actualizar la fecha de fin
+        # Llamar al método save original
         super(Suscripcion, self).save(*args, **kwargs)
 
+class Cupon(models.Model):
+    id_cupon = models.AutoField(primary_key=True)
+    codigo = models.CharField(max_length=50, unique=True)
+    descuento = models.DecimalField(max_digits=5, decimal_places=0)  # porcentaje de descuento
+    fecha_inicio = models.DateTimeField()
+    fecha_fin = models.DateTimeField()
+
+    def __str__(self):
+        return self.codigo
+    
+    
 class Pedido(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     id_pedido = models.AutoField(primary_key=True)

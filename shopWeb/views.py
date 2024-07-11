@@ -6,12 +6,12 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required,user_passes_test
-from .models import Suscripcion, Producto, Categoria, SubCategoria, User_direccion, Suscripcion
-from .forms import ProductoForm, DireccionForm, SuscripcionForm
+from .models import Cupon, Suscripcion, Producto, Categoria, SubCategoria, User_direccion, Suscripcion
+from .forms import ProductoForm, DireccionForm, SuscripcionForm, CuponForm
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.db import transaction
-from .services import registrar_suscriptor, eliminar_suscriptor, consultar_vigencia
+from django.utils import timezone
 
 
 # List of URLs that require authentication
@@ -25,6 +25,12 @@ protected_urls = [
     '/shopWeb/profile/agregar',
     '/shopWeb/profile/editar/<int:direccion_id>',
     '/shopWeb/profile/eliminar_direccion/<int:direccion_id>',
+    '/shopWeb/profile/suscripcion/',
+    '/shopWeb/profile/cancelar_suscripcion/',
+    '/shopWeb/admin/gestion_cupones/',
+    '/shopWeb/admin/cupones/agregar',
+    '/shopWeb/admin/cupones/editar/<int:id>',
+    '/shopWeb/admin/cupones/eliminar/<int:id>',
 ]
 
 # Create your views here.
@@ -109,8 +115,10 @@ def sobre_nosotros(request):
 def profile(request):
     user = request.user
     direcciones = User_direccion.objects.filter(user=request.user)
-    suscripcion = Suscripcion.objects.filter(user=user).first()
-    
+    suscripcion = Suscripcion.objects.filter(user=request.user).first() 
+
+
+
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
@@ -133,7 +141,6 @@ def profile(request):
     }
     
     return render(request, 'shopWeb/perfil_cliente/profile.html', context)
-
 
 # PERFIL - CRUD DIRECCIONES
 
@@ -174,11 +181,16 @@ def eliminar_direccion(request, direccion_id):
         return redirect('direcciones')
     
 # PERFIL - SUSCRIPCIÓN
-
 @login_required
 def suscripcion(request):
     usuario = request.user
-    suscripcion_actual = Suscripcion.objects.filter(user=usuario, activa=True).first()
+    suscripcion_actual = Suscripcion.objects.filter(user=usuario).first()
+    
+    # Verificar si existe una suscripción activa
+    if suscripcion_actual:
+        print("ACTIVA:", suscripcion_actual.activa)
+    else:
+        print("No hay suscripción activa")
 
     if request.method == 'POST':
         form = SuscripcionForm(request.POST)
@@ -190,13 +202,19 @@ def suscripcion(request):
             if monto_donacion == 'otro':
                 monto_donacion = monto_otro
 
-            if suscripcion_actual:
+            if suscripcion_actual :
                 suscripcion_actual.monto = monto_donacion
                 suscripcion_actual.duracion = duracion_suscripcion
+                suscripcion_actual.activa = True  # Asegurarse de establecer el valor activa
+                suscripcion_actual.fecha_inicio = timezone.now()  # Actualiza la fecha de inicio
                 suscripcion_actual.save()
             else:
                 suscripcion_nueva = Suscripcion(
-                    user=usuario, monto=monto_donacion, duracion=duracion_suscripcion)
+                    user=usuario,
+                    monto=monto_donacion,
+                    duracion=duracion_suscripcion,
+                    activa=True
+                )
                 suscripcion_nueva.save()
 
             messages.success(request, 'Suscripción actualizada correctamente.')
@@ -209,8 +227,6 @@ def suscripcion(request):
         'form': form
     }
     return render(request, 'shopWeb/perfil_cliente/suscripcion.html', context)
-
-
 
 @csrf_exempt
 def rest_simulado_suscripcion(request):
@@ -250,29 +266,16 @@ def rest_simulado_suscripcion(request):
 @login_required
 def cancelar_suscripcion(request):
     user = request.user
-    suscripcion = Suscripcion.objects.filter(user=user).first()
+    suscripcion = Suscripcion.objects.filter(user=user, activa=True).first()
 
     if suscripcion:
-        # Simular llamada a la función de eliminar suscriptor
-        result = eliminar_suscriptor(user)
-        if result.get("success"):
-            suscripcion.delete()
-            messages.success(request, "Suscripción cancelada exitosamente.")
-        else:
-            messages.error(request, result.get("message", "Error al cancelar la suscripción."))  # Mostrar mensaje de error
+        suscripcion.activa = False  # Marcar como inactiva
+        suscripcion.save()
+        messages.success(request, "Suscripción cancelada exitosamente.")
+    else:
+        messages.error(request, "No se encontró una suscripción activa para cancelar.")
 
     return redirect('profile')
-
-def eliminar_suscriptor(user):
-    # Simulación de eliminación de suscriptor
-    # Aquí puedes implementar la lógica para eliminar el suscriptor, por ejemplo, llamar a un servicio externo.
-    # Retorna un diccionario con la clave "success".
-    try:
-        # Simulación de eliminación exitosa
-        return {"success": True}
-    except Exception as e:
-        return {"success": False, "message": str(e)}
-
 
 #CARRITO DE COMPRAS
 
@@ -291,13 +294,35 @@ def guardar_carrito(request):
             return JsonResponse({'success': False, 'error': str(e)})
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
+@csrf_exempt
+@login_required
+def aplicar_cupon(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            print("Datos recibidos: ", data)  # Añadir para depuración
+            codigo_cupon = data.get('codigo_cupon', '')
+            cupon = get_object_or_404(Cupon, codigo=codigo_cupon, fecha_inicio__lte=timezone.now(), fecha_fin__gte=timezone.now())
+            cupon_descuento = cupon.descuento
+            return JsonResponse({'success': True, 'descuento': cupon_descuento})
+        except Cupon.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Cupón no válido o ya usado'})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
 def carro_compras(request):
-    # Cargar el carrito desde las cookies
     carrito_cookie = request.COOKIES.get('carrito', '[]')
     carrito = json.loads(carrito_cookie)
-    print("\n\n CARRITO", carrito)
-    context = {'productos_carrito': carrito}
-
+    usuario = request.user
+    descuento_suscripcion = 0
+    if usuario.is_authenticated:
+        suscripcion = Suscripcion.objects.filter(user=usuario, activa=True).first()
+        if suscripcion:
+            descuento_suscripcion = 5  # Ajusta el valor según sea necesario
+    
+    context = {
+        'productos_carrito': carrito,
+        'descuento_suscripcion': descuento_suscripcion
+    }
     return render(request, 'shopWeb/perfil_cliente/carro_compras.html', context)
 
 @csrf_exempt
@@ -306,45 +331,41 @@ def carro_compras(request):
 def procesar_pago(request):
     if request.method == 'POST':
         try:
-            # Obtener el carrito de la sesión
             carrito = request.session.get('carrito', [])
-            print("\n\n CARRITO:", carrito)  # Imprime el carrito para verificar
+            cupon_codigo = request.POST.get('cupon_codigo', '')
+            cupon_descuento = 0
+
+            if cupon_codigo:
+                cupon = get_object_or_404(Cupon, codigo=cupon_codigo, usado=False, fecha_expiracion__gte=timezone.now())
+                cupon_descuento = cupon.descuento
+                cupon.usado = True
+                cupon.save()
+
+            suscripcion = Suscripcion.objects.filter(user=request.user, activa=True).first()
+            descuento_suscripcion = 5 if suscripcion else 0
 
             with transaction.atomic():
-                # Iterar sobre los productos en el carrito y actualizar el stock
                 for item in carrito:
-                    try:
-                        producto_id = item['producto']['id']
-                        cantidad = item['cantidad']
-                        print("\n\n Procesando producto_id:", producto_id, "Cantidad:", cantidad)
-                        
-                        # Utilizar id_producto en lugar de id
-                        producto = get_object_or_404(Producto, id_producto=int(producto_id))
-                        print("\n\n Producto obtenido:", producto)
+                    producto_id = item['producto']['id']
+                    cantidad = item['cantidad']
+                    producto = get_object_or_404(Producto, id_producto=int(producto_id))
 
-                        if producto.stock >= cantidad:
-                            producto.stock -= cantidad
-                            producto.save()
-                            print("\n\n Producto actualizado:", producto)
-                        else:
-                            print("\n\n Stock insuficiente para:", producto.nombre)
-                            return JsonResponse({'error': True, 'message': f"No hay suficiente stock para {producto.nombre}."})
-                    except Exception as e:
-                        print("\n\n Error al procesar item:", item, "Error:", str(e))
-                        return JsonResponse({'error': True, 'message': f"Error al procesar el producto {item['producto']['nombre']}: {str(e)}"})
+                    if producto.stock >= cantidad:
+                        producto.stock -= cantidad
+                        producto.save()
+                    else:
+                        return JsonResponse({'error': True, 'message': f"No hay suficiente stock para {producto.nombre}."})
 
-                # Vaciar el carrito después de procesar el pago
+                total = sum(item['producto']['precio'] * item['cantidad'] for item in carrito)
+                total_descuento = total * (1 - (descuento_suscripcion + cupon_descuento) / 100)
                 request.session['carrito'] = []
-                print("\n\n Carrito vaciado después del pago")
-                return JsonResponse({'error': False, 'message': 'Pago procesado correctamente.'})
+
+                return JsonResponse({'error': False, 'message': 'Pago procesado correctamente.', 'total': total_descuento})
 
         except Exception as e:
-            print("\n\n Error en el procesamiento del pago:", str(e))
             return JsonResponse({'error': True, 'message': str(e)}, status=500)
 
     return JsonResponse({'error': True, 'message': 'Método no permitido.'})
-
-
 #PRODUCTOS
 
 def productos_view(request, categoria_nombre, subcategoria_nombre):
@@ -438,6 +459,53 @@ def producto_eliminar(request, id):
     producto = get_object_or_404(Producto, id_producto=id)
     producto.delete()
     return redirect('productos')
+
+# CRUD DE CUPONES
+
+@login_required
+@user_passes_test(es_admin)
+def gestion_cupones(request):
+    cupones = Cupon.objects.all()  # Cambia el nombre de la variable aquí
+    return render(request, 'shopWeb/admin/gestion_cupones.html', {'cupones': cupones})
+
+
+@login_required
+@user_passes_test(es_admin)
+def cupon_nuevo(request):
+    if request.method == 'POST':
+        form = CuponForm(request.POST)
+        if form.is_valid():
+            form.save()  # Guarda el formulario, que es un ModelForm, por lo que puede llamar directamente a save()
+            return redirect('gestion_cupones')
+        else:
+            print(form.errors)
+    else:
+        form = CuponForm()
+    return render(request, 'shopWeb/admin/cupon_nuevo.html', {'form': form})
+
+@login_required
+@user_passes_test(es_admin)
+def cupon_editar(request, id):
+    cupon = get_object_or_404(Cupon, id_cupon=id)
+    if request.method == 'POST':
+        form = CuponForm(request.POST, request.FILES, instance=cupon)
+        if form.is_valid():
+            form.save()
+            return redirect('gestion_cupones')
+    else:
+        form = CuponForm(instance=cupon)
+    
+    return render(request, 'shopWeb/admin/cupon_editar.html', {
+        'form': form,
+        'cupon': cupon
+    })
+
+@login_required
+@user_passes_test(es_admin)
+def cupon_eliminar(request, id):
+    cupon = get_object_or_404(Cupon, id_cupon=id)  # Asegúrate de que busque en la clase Cupon
+    cupon.delete()
+    return redirect('gestion_cupones')
 
 
 # CRUD DE PEDIDOS 
