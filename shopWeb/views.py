@@ -307,7 +307,10 @@ def aplicar_cupon(request):
             return JsonResponse({'success': True, 'descuento': cupon_descuento})
         except Cupon.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Cupón no válido o ya usado'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
 
 def carro_compras(request):
     carrito_cookie = request.COOKIES.get('carrito', '[]')

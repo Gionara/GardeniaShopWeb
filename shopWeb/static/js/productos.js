@@ -125,10 +125,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 const totalCantidadCarrito = carrito.reduce((total, item) => total + item.cantidad, 0);
                 cantidadTotalCarrito.innerHTML = `<h4>Cantidad de Productos: ${totalCantidadCarrito} </h4>`;
             }
-            if(descuentos){ 
-                aplicarDescuentos(total) 
-                actualizarTotalConDescuento();
-            }
 
             document.querySelectorAll('.menos-btn').forEach(btn => {
                 btn.removeEventListener('click', handleMenosButtonClick);
@@ -144,6 +140,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 btn.removeEventListener('click', handleEliminarProductoClick);
                 btn.addEventListener('click', handleEliminarProductoClick);
             });
+
+            calcularTotalConDescuento();
         }
     }
 
@@ -210,101 +208,11 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-
-   
-    let cuponDescuento = 0;
-    var descuentos = document.getElementById('descuentoSuscripcion');
-    // Función para aplicar el descuento de suscripción y el cupón
-    if(descuentos){ 
-        function aplicarDescuentos(total) {
-            let totalConDescuento = total;
-            console.log(descuentoSuscripcion);
-            console.log(totalConDescuento);
-            if (descuentoSuscripcion > 0) {
-                totalConDescuento -= (total * descuentoSuscripcion / 100);
-            }
-            if (cuponDescuento > 0) {
-                totalConDescuento -= (total * cuponDescuento / 100);
-            }
-            console.log(totalConDescuento);
-            return totalConDescuento;
-        }
-  
-    
-
-    // Función para actualizar el total con descuento
-        function actualizarTotalConDescuento() {
-            let total = 0;
-        
-            carrito.forEach(item => {
-                total += item.producto.precio * item.cantidad;
-            });
-        
-            const totalConDescuento = aplicarDescuentos(total);
-        
-            const totalContainer = document.getElementById('total-container');
-            if (totalContainer) {
-                totalContainer.innerHTML = `<h4>Total: $${total.toLocaleString()} </h4>`;
-            }
-        
-            const totalDescuentoContainer = document.getElementById('totalDescuento');
-            if (totalDescuentoContainer) {
-                totalDescuentoContainer.textContent = `$${totalConDescuento.toFixed(0)}`;
-            }
-        }
-    }else{
-        console.warn('Elemento con ID "descuentoSuscripcion" no encontrado en esta página.');
-    }
-
-    // Evento para aplicar el código de descuento
-    var botonDescuento = document.getElementById('aplicar-descuento');
-    if(botonDescuento){ 
-        botonDescuento.addEventListener('click', function () {
-        const codigo = document.getElementById('codigo-descuento').value;
-        console.log("Código ingresado: ", codigo);  // Añadir para depuración
-        if (codigo) {
-            var csrftoken = getCookie('csrftoken');
-            console.log("Enviando solicitud AJAX...");  // Añadir para depuración
-            $.ajax({
-                url: 'shopWeb/aplicar_cupon/',
-                type: 'POST',
-                headers: { 'X-CSRFToken': csrftoken },
-                contentType: 'application/json',
-                data: JSON.stringify({ codigo_cupon: codigo }),
-                success: function(response) {
-                    console.log("Respuesta recibida: ", response);  // Añadir para depuración
-                    if (response.success) {
-                        cuponDescuento = response.descuento;
-                        actualizarTotalConDescuento();
-                        alert(`Se ha aplicado un descuento del ${cuponDescuento}%`);
-                    } else {
-                        alert(response.error);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error al aplicar el cupón:', error);
-                }
-            });
-        } else {
-            alert('Por favor, ingresa un código de descuento.');
-        }
-    });
-    
-    
-
-    // Llamar a la función de actualización cuando se carga la página
-    
-        actualizarTotalConDescuento();
-        
-    } else {
-            console.warn('Elemento con ID "aplicar-descuento" no encontrado en esta página.');
-        }
-        
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
             const cookies = document.cookie.split(';');
-            for (let i = 0; cookies.length > i; i++) {
+            for (let i = 0; cookies.length; i++) {
                 const cookie = cookies[i].trim();
                 if (cookie.substring(0, name.length + 1) === (name + '=')) {
                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
@@ -315,9 +223,24 @@ document.addEventListener("DOMContentLoaded", function () {
         return cookieValue;
     }
 
-   
+
+/*     function calcularTotalConDescuento() {
+        const descuentoSuscripcion = parseFloat(document.getElementById('descuentoSuscripcion').textContent) || 0;
+        const descuentoCupon = parseFloat(document.getElementById('descuentoCupon').textContent) || 0;
+    
+        const totalContainer = document.getElementById('total-container');
+        let total = carrito.reduce((acc, item) => acc + item.producto.precio * item.cantidad, 0);
+        let descuentoSus = (total*descuentoSuscripcion)/100
+        let descuentoCup = (total*descuentoCupon)/100
+        let totalConDescuento = total - (total*descuentoSuscripcion)/100 - (total*descuentoCupon)/100;
+    
+        if (totalContainer) {
+            totalContainer.innerHTML = `<h4>Total: $${total.toLocaleString()}</h4>
+                                        <h4>Descuento Suscripción: $${descuentoSus.toLocaleString()}</h4>
+                                        <h4>Descuento Cupón: $${descuentoCup.toLocaleString()}</h4>
+                                        <h4>Total con Descuento: $${totalConDescuento.toLocaleString()}</h4>`;
+        }
+    } */
 
     cargarCarrito();
-    actualizarCarrito();
 });
-//KJHGFDSsdasdas
