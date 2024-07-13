@@ -294,22 +294,21 @@ def guardar_carrito(request):
             return JsonResponse({'success': False, 'error': str(e)})
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
+
+
+
 @csrf_exempt
-@login_required
+@require_POST
 def aplicar_cupon(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            print("Datos recibidos: ", data)  # Añadir para depuración
-            codigo_cupon = data.get('codigo_cupon', '')
-            cupon = get_object_or_404(Cupon, codigo=codigo_cupon, fecha_inicio__lte=timezone.now(), fecha_fin__gte=timezone.now())
-            cupon_descuento = cupon.descuento
-            return JsonResponse({'success': True, 'descuento': cupon_descuento})
-        except Cupon.DoesNotExist:
-            return JsonResponse({'success': False, 'error': 'Cupón no válido o ya usado'})
-        except Exception as e:
-            return JsonResponse({'success': False, 'error': str(e)})
-    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+    data = json.loads(request.body)
+    codigo_cupon = data.get('codigo_cupon')
+
+    try:
+        cupon = Cupon.objects.get(codigo=codigo_cupon, activo=True)
+        descuento = cupon.descuento
+        return JsonResponse({'success': True, 'descuento': descuento})
+    except Cupon.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Código de cupón inválido o inactivo'})
 
 
 def carro_compras(request):
@@ -369,6 +368,7 @@ def procesar_pago(request):
             return JsonResponse({'error': True, 'message': str(e)}, status=500)
 
     return JsonResponse({'error': True, 'message': 'Método no permitido.'})
+
 #PRODUCTOS
 
 def productos_view(request, categoria_nombre, subcategoria_nombre):

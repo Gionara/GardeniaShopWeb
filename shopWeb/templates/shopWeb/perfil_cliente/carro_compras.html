@@ -1,9 +1,7 @@
 {% extends 'shopWeb/layouts/base.html' %}
 {% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-
-{% block title %}🌸Gardenia - Carro de compras 🌸{% endblock %}
+{% block title %} 🌸Gardenia - Carro de Compras 🌸 {% endblock %}
 
 {% block content %}
 <div class="container mt-5">
@@ -14,45 +12,64 @@
                 <div class="col-lg-6 col-md-8">
                     <h4>Productos</h4>
                     <div id="carrito-container"></div>
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                        <button class="btn btn-outline-danger mt-3" id="vaciar-carrito">
-                            <h6><i class="bi bi-trash3-fill"></i> Vaciar Carrito</h6>
+                    <div
+                        class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <button class="btn btn-outline-danger mt-3"
+                            id="vaciar-carrito">
+                            <h6><i class="bi bi-trash3-fill"></i> Vaciar
+                                Carrito</h6>
                         </button>
                     </div>
                 </div>
                 <div class="col-lg-4">
                     <h3>Resumen de compra</h3>
                     <br>
-                    <div id="total-container"> </div>
+                    <div id="total-container"></div>
                     <br>
                     <div id="cantidad-total"></div>
                     <br>
-              
+
                     <!-- Código de descuento -->
                     {% if request.user.is_authenticated %}
                     <div class="form-group">
-                        <label for="codigo-descuento">Código de Descuento:</label>
-                        <input type="text" id="codigo-descuento" class="form-control">
-                        <button class="btn btn-primary mt-2" id="aplicar-descuento">Aplicar Código</button>
+                        <label for="codigo-descuento">Código de
+                            Descuento:</label>
+                        <input type="text" id="codigo-descuento"
+                            class="form-control">
+                        <button class="btn btn-primary mt-2"
+                            id="aplicar-descuento">Aplicar Código</button>
                     </div>
 
-                    <!-- Mostrar el descuento de suscripción -->
-                    <p>Descuento por cupón: <span id="descuentoCupon">0</span>%</p>
-                    {% if descuento_suscripcion %}
-                        <p>Descuento por suscripción: <span id="descuentoSuscripcion">{{ descuento_suscripcion|default:0 }}</span>%</p>
+                    <!-- Mostrar el descuento del cupón -->
+                    {% if cupon_descuento %}
+                         <p>Descuento por cupón: <span id="descuentoCupon">{{ cupon_descuento }}</span>%</p>
                     {% endif %}
+
+                    <!-- Mostrar el descuento de suscripción -->
+                      <p>Descuento por suscripción: <span id="descuentoSuscripcion">{{ descuento_suscripcion }}</span>%</p>
                     {% endif %}
 
                     <!-- Mostrar el total con los descuentos aplicados -->
-                    <div id="total-Descuento-container"></div>
+                    <div id="totalDescuentosContainer">
+                   
+                        <p>Descuento por cupón: $<span
+                                id="descuentoCuponValor">0</span></p>
+                        <p>Descuento por suscripción: $<span
+                                id="descuentoSuscripcionValor">0</span></p>
+                        <p>Total a pagar (con descuentos): $<span
+                                id="totalConDescuentos">0</span></p>
+                    </div>
 
                     {% if request.user.is_authenticated %}
                     <div class="d-grid gap-2 col-6 mx-auto">
-                        <button class="btn btn-success mt-3 btn-lg" id="pagar-carrito">Pagar Productos</button>
+                        <button class="btn btn-success mt-3 btn-lg"
+                            id="pagar-carrito">Pagar Productos</button>
                     </div>
                     {% else %}
                     <div class="d-grid gap-2 col-6 mx-auto">
-                        <button class="btn btn-success mt-3 btn-lg" id="sing-in-pago">Inicia sesión para pagar productos</button>
+                        <button class="btn btn-success mt-3 btn-lg"
+                            id="sing-in-pago">Inicia sesión para pagar
+                            productos</button>
                     </div>
                     {% endif %}
                 </div>
@@ -62,87 +79,31 @@
 </div>
 
 <!-- Modal de Confirmación de Pago -->
-<div class="modal fade" id="modalConfirmarPago" tabindex="-1" aria-labelledby="modalConfirmarPagoLabel" aria-hidden="true">
+<div class="modal fade" id="modalConfirmarPago" tabindex="-1"
+    aria-labelledby="modalConfirmarPagoLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-dark">
-                <h5 class="modal-title" id="modalConfirmarPagoLabel">Confirmar Pago</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title" id="modalConfirmarPagoLabel">Confirmar
+                    Pago</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <p>¿Estás seguro de que deseas realizar el pago?</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success" id="confirmar-pago">Confirmar</button>
+                <button type="button" class="btn btn-secondary"
+                    data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success"
+                    id="confirmar-pago">Confirmar</button>
             </div>
         </div>
     </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="{% static 'js/descuentos.js' %}"></script>
 <script src="{% static 'js/productos.js' %}"></script>
-<script>
-    const descuentoSuscripcion = parseFloat('{{ descuento_suscripcion|default:0 }}') || 0;
-
-    // Código de descuento
-    $(document).ready(function() {
-        $('#aplicar-descuento').on('click', function() {
-            const codigoCupon = $('#codigo-descuento').val();
-            if (!codigoCupon) {
-                alert('Por favor, ingrese un código de descuento.');
-                return;
-            }
-
-            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-            fetch("{% url 'aplicar_cupon' %}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken,
-                },
-                body: JSON.stringify({ codigo_cupon: codigoCupon }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const descuentoCupon = data.descuento;
-                    calcularTotalConDescuento(descuentoCupon);
-                    alert(`Código de descuento aplicado. Descuento: ${descuentoCupon}%`);
-                } else {
-                    alert(data.error);
-                }
-            })
-            .catch(error => {
-                console.error('Error al aplicar el cupón:', error);
-                alert('Ha ocurrido un error, por favor intente de nuevo.');
-            });
-        });
-
-        function calcularTotalConDescuento(descuentoCupon = 0) {
-            const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-            const total = carrito.reduce((acc, item) => acc + item.producto.precio * item.cantidad, 0);
-            const totalConDescuento = total * (1 - (descuentoSuscripcion / 100)) * (1 - (descuentoCupon / 100));
-            
-            const descuentoSuscripcionElement = document.getElementById('descuentoSuscripcion');
-            const descuentoCuponElement = document.getElementById('descuentoCupon');
-            const descuentoSuscripcion = descuentoSuscripcionElement ? parseFloat(descuentoSuscripcionElement.textContent) : 0;
-            const totalContainer = document.getElementById('total-container');
-            let descuentoSus = (total * descuentoSuscripcion) / 100;
-            let descuentoCup = (total * descuentoCupon) / 100;
-
-            if (totalContainer) {
-                totalContainer.innerHTML = `<h4>Total: $${total.toLocaleString()}</h4>
-                                            <h4>Descuento Suscripción: $${descuentoSus.toLocaleString()}</h4>
-                                            <h4>Descuento Cupón: $${descuentoCup.toLocaleString()}</h4>
-                                            <h4>Total con Descuento: $${totalConDescuento.toLocaleString()}</h4>`;
-            }
-        }
-
-        calcularTotalConDescuento();
-    });
-</script>
+<script src="{% static 'js/descuentos.js' %}"></script>
 
 {% endblock %}

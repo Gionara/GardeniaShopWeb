@@ -59,6 +59,7 @@ class CuponForm(forms.ModelForm):
             'descuento': 'Descuento (%)',
             'fecha_inicio': 'Fecha de inicio',
             'fecha_fin': 'Fecha de término',
+            'activo': 'Cupon activo',
         }
         widgets = {
             'codigo': forms.TextInput(attrs={'class': 'form-control'}),

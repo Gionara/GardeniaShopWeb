@@ -82,10 +82,10 @@ class Cupon(models.Model):
     descuento = models.DecimalField(max_digits=5, decimal_places=0)  # porcentaje de descuento
     fecha_inicio = models.DateTimeField()
     fecha_fin = models.DateTimeField()
-
+    activo = models.BooleanField(default=True)
     def __str__(self):
         return self.codigo
-    
+
     
 class Pedido(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -1,47 +1,94 @@
 // descuentos.js
-
-function calcularTotalConDescuento() {
-    const descuentoSuscripcionElement = document.getElementById('descuentoSuscripcion');
-    const descuentoCuponElement = document.getElementById('descuentoCupon');
-
-    const descuentoSuscripcion = descuentoSuscripcionElement ? parseFloat(descuentoSuscripcionElement.textContent) : 0;
-    const descuentoCupon = descuentoCuponElement ? parseFloat(descuentoCuponElement.textContent) : 0;
-
-    const totalContainer = document.getElementById('total-container');
-    const carrito = JSON.parse(localStorage.getItem('carrito'))
-    let total = carrito.reduce((acc, item) => acc + item.producto.precio * item.cantidad, 0);
-    let descuentoSus = (total * descuentoSuscripcion) / 100;
-    let descuentoCup = (total * descuentoCupon) / 100;
-    let totalConDescuento = total - descuentoSus - descuentoCup;
-
-    if (totalContainer) {
-        totalContainer.innerHTML = `<h4>Total: $${total.toLocaleString()}</h4>
-                                    <h4>Descuento Suscripción: $${descuentoSus.toLocaleString()}</h4>
-                                    <h4>Descuento Cupón: $${descuentoCup.toLocaleString()}</h4>
-                                    <h4>Total con Descuento: $${totalConDescuento.toLocaleString()}</h4>`;
-    }
-}
-
-
 document.addEventListener("DOMContentLoaded", function () {
-    const aplicarCuponBtn = document.getElementById('aplicarCupon');
-    if (aplicarCuponBtn) {
-        aplicarCuponBtn.addEventListener('click', function () {
-            var codigoCupon = document.getElementById('cupon').value;
-            var descuentoCupon = 0;
+    function aplicarDescuentoCupon() {
+        var codigoDescuento = $('#codigo-descuento').val();
 
-            fetch(`/aplicar_cupon/${codigoCupon}/`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        descuentoCupon = data.descuento;
-                        document.getElementById('descuentoCupon').innerText = descuentoCupon;
-                        calcularTotalConDescuento();
-                        alert('Cupón aplicado con éxito.');
-                    } else {
-                        alert('Cupón inválido o no aplicable.');
-                    }
-                });
+        $.ajax({
+            type: 'POST',
+            url: 'shopWeb/aplicar_cupon/',  // Asegúrate de que la URL sea la correcta
+            data: JSON.stringify({ 'codigo_cupon': codigoDescuento }),
+            contentType: 'application/json',
+            success: function(response) {
+                console.log(response);
+                console.log("APLICAR CUPON")
+                if (response.success) {
+                    var descuentoCupon = response.descuento;
+                    console.log("DESCUENTO CUPON", descuentoCupon)
+                    $('#descuentoCupon').text(descuentoCupon);
+                    calcularTotalConDescuentos(descuentoCupon);
+                } else {
+                    alert('Error: ' + response.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error en la solicitud AJAX:', status, error);
+            }
         });
+
     }
+
+
+    function aplicarDescuentoSuscripcion(descuentoSuscripcion) {
+        // Lógica para aplicar el descuento de suscripción
+        $('#descuentoSuscripcion').text(descuentoSuscripcion);
+        calcularTotalConDescuentos();
+    }
+
+    function calcularTotalConDescuentos(descuentoCupon) {
+        var totalCarrito = parseInt($('#totalCarrito').text());
+        var descuentoSuscripcion = parseInt($('#descuentoSuscripcion').text());
+        console.log("totalCarrito", totalCarrito)
+        console.log("descuentoCupon", descuentoCupon)
+        console.log("descuentoSuscripcion", descuentoSuscripcion)
+
+        // Asegúrate de que totalCarrito es un número válido
+        if (isNaN(totalCarrito)) {
+            totalCarrito = 0;
+        }
+
+        if ((descuentoCupon>0) || (descuentoSuscripcion>0)){ 
+            if(descuentoCupon>0){ 
+                var descuentoCuponValor = (totalCarrito * descuentoCupon )/ 100;
+                
+            }else{
+                var descuentoCuponValor = 0
+            }
+
+            if(descuentoSuscripcion>0){ 
+            var descuentoSuscripcionValor = (totalCarrito * descuentoSuscripcion) / 100;
+            
+            }else{
+                var descuentoSuscripcionValor = 0
+            }
+            console.log("descuentoCuponValor", descuentoCuponValor)
+            console.log("descuentoSuscripcionValor", descuentoSuscripcionValor)
+            var totalConDescuentos = totalCarrito - descuentoCuponValor - descuentoSuscripcionValor;
+            console.log("totalConDescuentos", totalConDescuentos)
+
+            $('#descuentoCuponValor').text(descuentoCuponValor);
+            $('#descuentoSuscripcionValor').text(descuentoSuscripcionValor);
+            $('#totalConDescuentos').text(totalConDescuentos);
+            
+        }else{
+            var descuentoCuponValor = 0;
+            var descuentoSuscripcionValor = 0;
+            var totalConDescuentos = totalCarrito;
+            $('#totalCarrito').text(totalCarrito);
+            $('#descuentoCuponValor').text(descuentoCuponValor);
+            $('#descuentoSuscripcionValor').text(descuentoSuscripcionValor);
+            $('#totalConDescuentos').text(totalConDescuentos);
+        }
+    }
+    $(document).ready(function() {
+        $('#aplicar-descuento').click(function() {
+            aplicarDescuentoCupon();
+        });
+
+        var descuentoSuscripcion = parseFloat($('#descuentoSuscripcion').text());
+        if (isNaN(descuentoSuscripcion)) {
+            descuentoSuscripcion = 0;
+        }
+        aplicarDescuentoSuscripcion(descuentoSuscripcion);
+    });
+
 });

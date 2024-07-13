@@ -16,7 +16,12 @@ urlpatterns = [
     path('guardar_carrito/', views.guardar_carrito, name='guardar_carrito'),
     path('aplicar_cupon/', views.aplicar_cupon, name='aplicar_cupon'),
 
+# SUSCRIPCIONES
 
+    path('profile/suscripcion/', views.suscripcion, name='suscripcion'),
+    path('profile/cancelar_suscripcion/', views.cancelar_suscripcion, name='cancelar_suscripcion'),
+    path('rest/simulacion/suscripcion/', views.rest_simulado_suscripcion, name='rest_simulado_suscripcion'),
+    
 # CRUD DIRECCIONES
 
     path('profile/direcciones/', views.direcciones, name='direcciones'),
@@ -24,11 +29,7 @@ urlpatterns = [
     path('profile/direcciones/editar/<int:direccion_id>', views.editar_direccion, name='editar_direccion'),
     path('profile/direcciones/eliminar/<int:direccion_id>', views.eliminar_direccion, name='eliminar_direccion'),
 
-# SUSCRIPCIONES
 
-    path('profile/suscripcion/', views.suscripcion, name='suscripcion'),
-    path('profile/cancelar_suscripcion/', views.cancelar_suscripcion, name='cancelar_suscripcion'),
-    path('rest/simulacion/suscripcion/', views.rest_simulado_suscripcion, name='rest_simulado_suscripcion'),
 
 # INFO GARDENIA 
     path('politicas', views.politicas, name='politicas'),

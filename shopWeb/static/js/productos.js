@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (carritoContainer) {
             carritoContainer.innerHTML = '';
             let total = 0;
-
+    
             carrito.forEach(item => {
                 total += item.producto.precio * item.cantidad;
                 const itemElement = document.createElement('div');
@@ -108,43 +108,42 @@ document.addEventListener("DOMContentLoaded", function () {
                 `;
                 carritoContainer.appendChild(itemElement);
             });
-
+    
             const totalContainer = document.getElementById('total-container');
             if (totalContainer) {
-                totalContainer.innerHTML = `<h4>Total: $${total.toLocaleString()} </h4>`;
+                totalContainer.innerHTML = `<h4>Total: $<span id="totalCarrito">${total}</span></h4>`;
             }
-
+    
             const carritoIcono = document.getElementById('carrito-icono');
             if (carritoIcono) {
                 const totalCantidad = carrito.reduce((total, item) => total + item.cantidad, 0);
                 carritoIcono.textContent = totalCantidad;
             }
-
+    
             const cantidadTotalCarrito = document.getElementById('cantidad-total');
             if (cantidadTotalCarrito) {
                 const totalCantidadCarrito = carrito.reduce((total, item) => total + item.cantidad, 0);
                 cantidadTotalCarrito.innerHTML = `<h4>Cantidad de Productos: ${totalCantidadCarrito} </h4>`;
             }
-
+    
             document.querySelectorAll('.menos-btn').forEach(btn => {
                 btn.removeEventListener('click', handleMenosButtonClick);
                 btn.addEventListener('click', handleMenosButtonClick);
             });
-
+    
             document.querySelectorAll('.mas-btn').forEach(btn => {
                 btn.removeEventListener('click', handleMasButtonClick);
                 btn.addEventListener('click', handleMasButtonClick);
             });
-
+    
             document.querySelectorAll('.eliminar-producto').forEach(btn => {
                 btn.removeEventListener('click', handleEliminarProductoClick);
                 btn.addEventListener('click', handleEliminarProductoClick);
             });
-
-            calcularTotalConDescuento();
+    
         }
     }
-
+    
     function vaciarCarrito() {
         carrito = [];
         localStorage.removeItem('carrito');
@@ -224,23 +223,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-/*     function calcularTotalConDescuento() {
-        const descuentoSuscripcion = parseFloat(document.getElementById('descuentoSuscripcion').textContent) || 0;
-        const descuentoCupon = parseFloat(document.getElementById('descuentoCupon').textContent) || 0;
-    
-        const totalContainer = document.getElementById('total-container');
-        let total = carrito.reduce((acc, item) => acc + item.producto.precio * item.cantidad, 0);
-        let descuentoSus = (total*descuentoSuscripcion)/100
-        let descuentoCup = (total*descuentoCupon)/100
-        let totalConDescuento = total - (total*descuentoSuscripcion)/100 - (total*descuentoCupon)/100;
-    
-        if (totalContainer) {
-            totalContainer.innerHTML = `<h4>Total: $${total.toLocaleString()}</h4>
-                                        <h4>Descuento Suscripción: $${descuentoSus.toLocaleString()}</h4>
-                                        <h4>Descuento Cupón: $${descuentoCup.toLocaleString()}</h4>
-                                        <h4>Total con Descuento: $${totalConDescuento.toLocaleString()}</h4>`;
-        }
-    } */
 
     cargarCarrito();
 });
