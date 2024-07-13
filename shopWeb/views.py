@@ -295,8 +295,6 @@ def guardar_carrito(request):
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 
-
-
 @csrf_exempt
 @require_POST
 def aplicar_cupon(request):
@@ -317,14 +315,25 @@ def carro_compras(request):
     carrito = json.loads(carrito_cookie)
     usuario = request.user
     descuento_suscripcion = 0
+    direcciones = None
     if usuario.is_authenticated:
         suscripcion = Suscripcion.objects.filter(user=usuario, activa=True).first()
         if suscripcion:
             descuento_suscripcion = 5  # Ajusta el valor según sea necesario
+        direcciones = User_direccion.objects.filter(user=usuario)
     
+    form=DireccionForm(request.POST)
+    if form.is_valid():
+        direccion = form.save(commit=False)
+        direccion.user = request.user
+        direccion.save()
+    else:
+        form = DireccionForm()
     context = {
         'productos_carrito': carrito,
-        'descuento_suscripcion': descuento_suscripcion
+        'descuento_suscripcion': descuento_suscripcion,
+        'direcciones': direcciones,
+        'form': form
     }
     return render(request, 'shopWeb/perfil_cliente/carro_compras.html', context)
 

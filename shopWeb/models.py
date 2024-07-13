@@ -91,19 +91,24 @@ class Pedido(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     id_pedido = models.AutoField(primary_key=True)
     fecha_pedido = models.DateTimeField(auto_now_add=True)
-    fecha_entrega = models.DateTimeField(null=True, blank=True)
     direccion = models.ForeignKey(User_direccion, on_delete=models.CASCADE)
     total = models.IntegerField()
-    estado = models.CharField(max_length=50)
-    pagado = models.BooleanField(default=False)
+    estado_envio = models.CharField(max_length=50)
+
+    def save(self, *args, **kwargs):
+        self.total = sum(detalle.subtotal for detalle in self.detalles.all())
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'Pedido {self.id_pedido} - {self.user.username}'
+        return f'Pedido {self.id} - Usuario: {self.usuario.username}'
 
-class PedidoProducto(models.Model):
-    pedido = models.ForeignKey(Pedido, related_name='productos', on_delete=models.CASCADE)
+
+class DetallePedido(models.Model):
+    pedido = models.ForeignKey('Pedido', related_name='detalles', on_delete=models.CASCADE)
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
-    cantidad = models.IntegerField()
+    cantidad = models.PositiveIntegerField()
+    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return f'{self.cantidad} x {self.producto.nombre}'
+        return f'Detalle de Pedido {self.pedido.id}: {self.producto.nombre}'

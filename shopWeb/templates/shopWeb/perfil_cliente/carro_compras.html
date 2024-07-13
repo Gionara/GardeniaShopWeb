@@ -49,14 +49,26 @@
                       <div class="hidden" id="descuentoCuponContainer">
                         <h6 >Descuento por Cupón: $<span id="descuentoCuponValor">0</span> (- <span id="descuentoCupon"></span>% <span id="codigoCupon"></span> )</h6>
                        </div>
-                    {% endif %}
+                   
                     <!-- Mostrar el descuento de suscripción -->
                     {% if descuento_suscripcion %}
                       <p class="d-none">Descuento por suscripción: <span id="descuentoSuscripcion">{{ descuento_suscripcion }}</span>%</p>
                       <h6>Descuento por Suscripción: $<span id="descuentoSuscripcionValor">0</span> (<span id="descuentoSuscripcion">-{{ descuento_suscripcion }}</span>%)</h4>
-                       {% endif %}
+                        {% endif %}
+                        <div class="form-group">
+                            <label for="direccion-envio">Dirección de Envío:</label>
+                            <select id="direccion-envio" class="form-control">
+                                <option value="" selected disabled>Seleccionar dirección guardada</option>
+                                {% for direccion in direcciones %}
+                                    <option value="{{ direccion.id }}">{{ direccion.nombre_dirreccion }} - {{ direccion.direccion }}, {{ direccion.ciudad }}</option>
+                                {% endfor %}
+                            </select>
+                            <button class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#modalAgregarDireccion">Añadir Nueva Dirección</button>
+                        </div>
+                    {% endif %}
 
                        <h4>Total a Pagar: $<span id="totalConDescuentos">0</span></h4>
+
                     {% if request.user.is_authenticated %}
                     <div class="d-grid gap-2 col-6 mx-auto">
                         <button class="btn btn-success mt-3 btn-lg"
@@ -74,7 +86,30 @@
         </div>
     </main>
 </div>
-
+<!-- Modal para agregar nueva dirección -->
+<div class="modal fade" id="modalAgregarDireccion" tabindex="-1" aria-labelledby="modalAgregarDireccionLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-dark">
+                <h5 class="modal-title" id="modalAgregarDireccionLabel">Agregar Nueva Dirección</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="formAgregarDireccion" method="post" >
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="container mt-5">
+                        <h2>Agregar Nueva Dirección</h2>
+                        {{ form.as_p }}
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar Dirección</button>
+                    </div>
+                </div>
+            </form>
+            
+            
+        </div>
+    </div>
+</div>
 <!-- Modal de Confirmación de Pago -->
 <div class="modal fade" id="modalConfirmarPago" tabindex="-1"
     aria-labelledby="modalConfirmarPagoLabel" aria-hidden="true">
@@ -103,18 +138,24 @@
 <script src="{% static 'js/productos.js' %}"></script>
 <script src="{% static 'js/descuentos.js' %}"></script>
 <script>
-    $(document).ready(function() {
-        $('#pagar-carrito').on('click', function() {
-            $('#modalConfirmarPago').modal('show');
+$(document).ready(function() {
+    // Mostrar formulario para agregar nueva dirección
+    $('#modalAgregarDireccion').on('shown.bs.modal', function () {
+            $('#formAgregarDireccion')[0].reset();  // Reinicia el formulario al abrir el modal
         });
 
-        $('#sing-in-pago').on('click', function() {
-            $('#modalSignin').modal('show');
-        });
+    // Enviar confirmación de pago
+    $('#pagar-carrito').on('click', function() {
+        $('#modalConfirmarPago').modal('show');
+    });
 
-        $('#confirmar-pago').on('click', function() {
+    $('#sing-in-pago').on('click', function() {
+        $('#modalSignin').modal('show');
+    });
+
+    $('#confirmar-pago').on('click', function() {
         let carrito = JSON.parse(localStorage.getItem('carrito'));
-        console.log("Carrito antes de enviar:", carrito);  // Agrega un log para verificar los datos antes de enviar
+        console.log("Carrito antes de enviar:", carrito);
         $.ajax({
             type: 'POST',
             url: '{% url "procesar_pago" %}',
@@ -133,7 +174,7 @@
                 }
             },
             error: function(xhr, status, error) {
-                console.error('Error en la solicitud AJAX:', error);  // Agrega un log para errores AJAX
+                console.error('Error en la solicitud AJAX:', error);
                 alert('Ha ocurrido un error, por favor intente de nuevo.');
             }
         });
