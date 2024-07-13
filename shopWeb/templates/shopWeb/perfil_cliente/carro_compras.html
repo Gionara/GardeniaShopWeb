@@ -24,12 +24,16 @@
                 <div class="col-lg-4">
                     <h3>Resumen de compra</h3>
                     <br>
+                  
+                    <div id="cantidad-total"></div>
+                    <br>  
                     <div id="total-container"></div>
                     <br>
-                    <div id="cantidad-total"></div>
-                    <br>
 
-                    <!-- Código de descuento -->
+                  
+                    <div id="total-container"></div>
+
+                    <br>
                     {% if request.user.is_authenticated %}
                     <div class="form-group">
                         <label for="codigo-descuento">Código de
@@ -38,28 +42,21 @@
                             class="form-control">
                         <button class="btn btn-primary mt-2"
                             id="aplicar-descuento">Aplicar Código</button>
+                        <button class="btn btn-danger mt-2"
+                            id="eliminar-descuento">Eliminar Código</button>   
                     </div>
-
-                    <!-- Mostrar el descuento del cupón -->
-                    {% if cupon_descuento %}
-                         <p>Descuento por cupón: <span id="descuentoCupon">{{ cupon_descuento }}</span>%</p>
+                    <br>
+                      <div class="hidden" id="descuentoCuponContainer">
+                        <h6 >Descuento por Cupón: $<span id="descuentoCuponValor">0</span> (- <span id="descuentoCupon"></span>% <span id="codigoCupon"></span> )</h6>
+                       </div>
                     {% endif %}
-
                     <!-- Mostrar el descuento de suscripción -->
-                      <p>Descuento por suscripción: <span id="descuentoSuscripcion">{{ descuento_suscripcion }}</span>%</p>
-                    {% endif %}
+                    {% if descuento_suscripcion %}
+                      <p class="d-none">Descuento por suscripción: <span id="descuentoSuscripcion">{{ descuento_suscripcion }}</span>%</p>
+                      <h6>Descuento por Suscripción: $<span id="descuentoSuscripcionValor">0</span> (<span id="descuentoSuscripcion">-{{ descuento_suscripcion }}</span>%)</h4>
+                       {% endif %}
 
-                    <!-- Mostrar el total con los descuentos aplicados -->
-                    <div id="totalDescuentosContainer">
-                   
-                        <p>Descuento por cupón: $<span
-                                id="descuentoCuponValor">0</span></p>
-                        <p>Descuento por suscripción: $<span
-                                id="descuentoSuscripcionValor">0</span></p>
-                        <p>Total a pagar (con descuentos): $<span
-                                id="totalConDescuentos">0</span></p>
-                    </div>
-
+                       <h4>Total a Pagar: $<span id="totalConDescuentos">0</span></h4>
                     {% if request.user.is_authenticated %}
                     <div class="d-grid gap-2 col-6 mx-auto">
                         <button class="btn btn-success mt-3 btn-lg"
@@ -105,5 +102,42 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="{% static 'js/productos.js' %}"></script>
 <script src="{% static 'js/descuentos.js' %}"></script>
+<script>
+    $(document).ready(function() {
+        $('#pagar-carrito').on('click', function() {
+            $('#modalConfirmarPago').modal('show');
+        });
 
+        $('#sing-in-pago').on('click', function() {
+            $('#modalSignin').modal('show');
+        });
+
+        $('#confirmar-pago').on('click', function() {
+        let carrito = JSON.parse(localStorage.getItem('carrito'));
+        console.log("Carrito antes de enviar:", carrito);  // Agrega un log para verificar los datos antes de enviar
+        $.ajax({
+            type: 'POST',
+            url: '{% url "procesar_pago" %}',
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                carrito: JSON.stringify(carrito)
+            },
+            success: function(response) {
+                if (response.error) {
+                    alert(response.message);
+                } else {
+                    alert(response.message);
+                    localStorage.removeItem('carrito');
+                    location.reload();
+                    window.location.href = '{% url "index" %}';
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error en la solicitud AJAX:', error);  // Agrega un log para errores AJAX
+                alert('Ha ocurrido un error, por favor intente de nuevo.');
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

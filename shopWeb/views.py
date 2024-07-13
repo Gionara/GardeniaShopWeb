@@ -306,7 +306,8 @@ def aplicar_cupon(request):
     try:
         cupon = Cupon.objects.get(codigo=codigo_cupon, activo=True)
         descuento = cupon.descuento
-        return JsonResponse({'success': True, 'descuento': descuento})
+        codigo = cupon.codigo
+        return JsonResponse({'success': True,'codigo': codigo, 'descuento': descuento})
     except Cupon.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Código de cupón inválido o inactivo'})
 

@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
             const totalContainer = document.getElementById('total-container');
             if (totalContainer) {
-                totalContainer.innerHTML = `<h4>Total: $<span id="totalCarrito">${total}</span></h4>`;
+                totalContainer.innerHTML = `<h6>Total: $<span id="totalCarrito">${total}</span></h6>`;
             }
     
             const carritoIcono = document.getElementById('carrito-icono');
@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const cantidadTotalCarrito = document.getElementById('cantidad-total');
             if (cantidadTotalCarrito) {
                 const totalCantidadCarrito = carrito.reduce((total, item) => total + item.cantidad, 0);
-                cantidadTotalCarrito.innerHTML = `<h4>Cantidad de Productos: ${totalCantidadCarrito} </h4>`;
+                cantidadTotalCarrito.innerHTML = `<h6>Cantidad de Productos: ${totalCantidadCarrito} </h6>`;
             }
     
             document.querySelectorAll('.menos-btn').forEach(btn => {
@@ -140,6 +140,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 btn.removeEventListener('click', handleEliminarProductoClick);
                 btn.addEventListener('click', handleEliminarProductoClick);
             });
+
+            if (window.actualizarDescuentos) {
+                window.actualizarDescuentos();
+            }
     
         }
     }
