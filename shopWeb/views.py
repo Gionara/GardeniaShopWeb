@@ -682,7 +682,8 @@ def admin_actualizar_estado_pedido(request, id_pedido):
     pedido = get_object_or_404(Pedido, id_pedido=id_pedido)
     if request.method == 'POST':
         nuevo_estado = request.POST.get('estado')
-        pedido.estado = nuevo_estado
+        pedido.estado_envio = nuevo_estado
+        print(nuevo_estado)
         pedido.save()
         return redirect('admin_pedido_detalle', id_pedido=id_pedido)
     return render(request, 'shopWeb/admin/actualizar_estado_pedido.html', {'pedido': pedido})

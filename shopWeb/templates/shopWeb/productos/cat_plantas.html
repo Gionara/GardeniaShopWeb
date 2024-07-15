@@ -7,6 +7,66 @@
 {% block content %}
 
 <!-- CONTENIDO-->
+  <!-- CATEGORIAS -->
+  <div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="text-center"
+                style="font-style: normal; padding: 3%;">Categorías
+                de Plantas y Semillas</h1>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <!-- CARD 1 -->
+        <div class="col-lg-4 col-md-6 col-sm-8 mb-2">
+            <div class="card">
+                <a
+                    href="{% url 'productos' 'Plantas' 'Flores' %}l">
+                    <img
+                        src="{% static 'img/categoria/flores.jpg' %}"
+                        class="card-img-top" alt>
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title"
+                        style="color: #000000;">Flores</h5>
+                </div>
+            </div>
+        </div>
+        <!-- CARD 2 -->
+        <div class="col-lg-4 col-md-6 col-sm-8 mb-2">
+            <div class="card">
+                <a
+                    href="{% url 'productos' 'Plantas' 'Plantas y Arboles' %}">
+                    <img
+                        src="{% static 'img/categoria/plantas_arboles.jpg' %}"
+                        class="card-img-top" alt>
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title"
+                        style="color: #000000;">Plantas y
+                        Arboles</h5>
+
+                </div>
+            </div>
+        </div>
+        <!-- CARD 3 -->
+        <div class="col-lg-4 col-md-6 col-sm-8 mb-2">
+            <div class="card">
+                <a
+                    href="{% url 'productos' 'Plantas' 'Huerto' %}">
+                    <img
+                        src="{% static 'img/categoria/huerto.webp' %}"
+                        class="card-img-top" alt>
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title"
+                        style="color: #000000;">Huerto</h5>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 {% endblock %}

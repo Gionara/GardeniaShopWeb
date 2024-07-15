@@ -7,6 +7,66 @@
 {% block content %}
 
 <!-- CONTENIDO-->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="text-center"
+                style="font-style: normal; padding: 3%;">Categorías
+                de Herramientas</h1>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <!-- CARD 1 -->
+        <div class="col-lg-4 col-md-6 col-sm-8 mb-2">
+            <div class="card">
+                <a
+                    href="{% url 'productos' 'Herramientas' 'Tijeras' %}">
+                    <img
+                        src="{% static 'img/categoria/tijeras.jpg' %}"
+                        class="card-img-top" alt>
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title"
+                        style="color: #000000;">Tijeras</h5>
+                </div>
+            </div>
+        </div>
+        <!-- CARD 2 -->
+        <div class="col-lg-4 col-md-6 col-sm-8 mb-2">
+            <div class="card">
+                <a
+                    href="{% url 'productos' 'Herramientas' 'Palas' %}">
+                    <img
+                        src="{% static 'img/categoria/palas.png' %}"
+                        class="card-img-top" alt>
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title"
+                        style="color: #000000;">Palas</h5>
 
+                </div>
+            </div>
+        </div>
+        <!-- CARD 3 -->
+        <div class="col-lg-4 col-md-6 col-sm-8 mb-2">
+            <div class="card">
+                <a
+                    href="{% url 'productos' 'Herramientas' 'Otras Herramientas' %}">
+                    <img
+                        src="{% static 'img/categoria/otras_herramientas.jpg' %}"
+                        class="card-img-top" alt>
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title"
+                        style="color: #000000;">Otras
+                        Herramientas</h5>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</main>
+<div class="b-example-divider m-3"><p></p></div>
 
 {% endblock %}
