@@ -88,27 +88,24 @@ class Cupon(models.Model):
 
     
 class Pedido(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    ESTADO_CHOICES = (
+        ('pagado', 'Pagado'),
+        ('preparacion', 'En Preparación'),
+        ('enviado', 'Enviado'),
+        ('transporte', 'En Transporte'),
+        ('entregado', 'Entregado'),
+    )
     id_pedido = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     fecha_pedido = models.DateTimeField(auto_now_add=True)
-    direccion = models.ForeignKey(User_direccion, on_delete=models.CASCADE)
-    total = models.IntegerField()
-    estado_envio = models.CharField(max_length=50)
+    direccion_envio = models.ForeignKey(User_direccion, on_delete=models.SET_NULL, null=True)
+    total_pagado = models.DecimalField(max_digits=10, decimal_places=2,default=0)
+    estado_envio = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pagado')
 
-    def save(self, *args, **kwargs):
-        self.total = sum(detalle.subtotal for detalle in self.detalles.all())
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return f'Pedido {self.id} - Usuario: {self.usuario.username}'
-
-
-class DetallePedido(models.Model):
-    pedido = models.ForeignKey('Pedido', related_name='detalles', on_delete=models.CASCADE)
+class PedidoProducto(models.Model):
+    id_pedido_producto = models.AutoField(primary_key=True)
+    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidad = models.PositiveIntegerField()
-    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
-    subtotal = models.DecimalField(max_digits=10, decimal_places=2)
-
-    def __str__(self):
-        return f'Detalle de Pedido {self.pedido.id}: {self.producto.nombre}'
+    precio = models.DecimalField(max_digits=10, decimal_places=2,default=0)  # Campo para el precio del producto en el momento del pedido
+    cantidad = models.IntegerField(default=1)

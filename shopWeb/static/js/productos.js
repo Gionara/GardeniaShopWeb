@@ -148,6 +148,17 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
     
+    function calcularTotalCarrito() {
+        let total = 0;
+        carrito.forEach(item => {
+            total += item.producto.precio * item.cantidad;
+        });
+        return total;
+    }
+    
+    // Asegúrate de que esta función esté disponible globalmente
+    window.calcularTotalCarrito = calcularTotalCarrito;
+
     function vaciarCarrito() {
         carrito = [];
         localStorage.removeItem('carrito');

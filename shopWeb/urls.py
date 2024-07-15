@@ -58,6 +58,10 @@ urlpatterns = [
     path('admin/cupones/agregar', views.cupon_nuevo, name='agregar_cupon'),
     path('admin/cupones/editar/<int:id>', views.cupon_editar, name='editar_cupon'),
     path('admin/cupones/eliminar/<int:id>', views.cupon_eliminar, name='eliminar_cupon'),
+
+# PEDIDO
+    path('guardar_pedido/', views.guardar_pedido, name='guardar_pedido'),    
+    path('calcular_total_pedido', views.calcular_total_pedido, name='calcular_total_pedido'),
 ]
 
 

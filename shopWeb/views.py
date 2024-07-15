@@ -6,13 +6,13 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required,user_passes_test
-from .models import Cupon, Suscripcion, Producto, Categoria, SubCategoria, User_direccion, Suscripcion
+from .models import Pedido,PedidoProducto,Cupon, Suscripcion, Producto, Categoria, SubCategoria, User_direccion, Suscripcion
 from .forms import ProductoForm, DireccionForm, SuscripcionForm, CuponForm
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.db import transaction
 from django.utils import timezone
-
+from django.core.exceptions import ObjectDoesNotExist
 
 # List of URLs that require authentication
 protected_urls = [
@@ -31,6 +31,7 @@ protected_urls = [
     '/shopWeb/admin/cupones/agregar',
     '/shopWeb/admin/cupones/editar/<int:id>',
     '/shopWeb/admin/cupones/eliminar/<int:id>',
+    '/shopWeb/profile/carro_compras.html',
 ]
 
 # Create your views here.
@@ -316,26 +317,43 @@ def carro_compras(request):
     usuario = request.user
     descuento_suscripcion = 0
     direcciones = None
+
+    form= None 
     if usuario.is_authenticated:
         suscripcion = Suscripcion.objects.filter(user=usuario, activa=True).first()
         if suscripcion:
             descuento_suscripcion = 5  # Ajusta el valor según sea necesario
-        direcciones = User_direccion.objects.filter(user=usuario)
-    
-    form=DireccionForm(request.POST)
-    if form.is_valid():
-        direccion = form.save(commit=False)
-        direccion.user = request.user
-        direccion.save()
-    else:
-        form = DireccionForm()
+            direcciones = User_direccion.objects.filter(user=usuario)  # Filtrar direcciones únicas
+        print("Direcciones obtenidas de la base de datos:", direcciones)  # Verifica en la consola
+
+        if request.method == 'POST':
+            form = DireccionForm(request.POST)
+            if form.is_valid():
+                direccion = form.save(commit=False)
+                direccion.user = request.user
+                direccion.save()
+                # Redirigir o realizar alguna acción después de guardar la dirección
+                return redirect('carro_compras')  # Redirige a la misma página después de guardar la dirección
+            else:
+                # Manejar el caso donde el formulario no es válido
+                pass
+        else:
+            form = DireccionForm()
+
     context = {
         'productos_carrito': carrito,
         'descuento_suscripcion': descuento_suscripcion,
         'direcciones': direcciones,
         'form': form
     }
+
+    print("Carrito:", carrito)  # Impresión adicional para verificar el carrito
+    print("Descuento de suscripción:", descuento_suscripcion)  # Impresión adicional para verificar el descuento
+    print("Direcciones en el contexto:", direcciones)  # Impresión adicional para verificar las direcciones en el contexto
+
     return render(request, 'shopWeb/perfil_cliente/carro_compras.html', context)
+
+
 
 @csrf_exempt
 @login_required
@@ -343,8 +361,19 @@ def carro_compras(request):
 def procesar_pago(request):
     if request.method == 'POST':
         try:
-            carrito = request.session.get('carrito', [])
-            cupon_codigo = request.POST.get('cupon_codigo', '')
+            data = json.loads(request.body)
+            carrito = data.get('carrito', [])
+            direccion_id = data.get('direccion_id')
+
+            if not direccion_id:
+                return JsonResponse({'error': True, 'message': 'Debe seleccionar una dirección de envío.'})
+
+            try:
+                direccion = User_direccion.objects.get(id=direccion_id, user=request.user)
+            except ObjectDoesNotExist:
+                return JsonResponse({'error': True, 'message': 'La dirección seleccionada no existe para el usuario actual.'})
+
+            cupon_codigo = data.get('cupon_codigo', '')
             cupon_descuento = 0
 
             if cupon_codigo:
@@ -370,13 +399,16 @@ def procesar_pago(request):
 
                 total = sum(item['producto']['precio'] * item['cantidad'] for item in carrito)
                 total_descuento = total * (1 - (descuento_suscripcion + cupon_descuento) / 100)
+
+                # Aquí puedes guardar el pedido en la base de datos si es necesario
+
+                # Vaciar el carrito en la sesión
                 request.session['carrito'] = []
 
-                return JsonResponse({'error': False, 'message': 'Pago procesado correctamente.', 'total': total_descuento})
+                return JsonResponse({'error': False, 'message': 'Pedido procesado correctamente.', 'redirect_url': reverse('index')})
 
         except Exception as e:
-            return JsonResponse({'error': True, 'message': str(e)}, status=500)
-
+            return JsonResponse({'error': True, 'message': str(e)})
     return JsonResponse({'error': True, 'message': 'Método no permitido.'})
 
 #PRODUCTOS
@@ -522,6 +554,66 @@ def cupon_eliminar(request, id):
 
 
 # CRUD DE PEDIDOS 
+
+@csrf_exempt
+def guardar_pedido(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        carrito = data.get('carrito')
+        direccion_id = data.get('direccion_id')
+        total = data.get('total')
+        user = request.user
+
+        if not direccion_id:
+            return JsonResponse({'success': False, 'error': 'No se seleccionó una dirección de envío.'})
+
+        try:
+            direccion = User_direccion.objects.get(id_direccion=direccion_id, user=user)
+
+            # Crear el pedido
+            pedido = Pedido.objects.create(
+                user=user,
+                direccion_envio=direccion,
+                total_pagado=total,
+                estado_envio='pendiente'
+            )
+
+            # Guardar los productos del carrito en PedidoProducto
+            for item in carrito:
+                producto_id = item['producto']['id']
+                cantidad = item['cantidad']
+
+                # Obtener el producto desde la base de datos
+                producto = Producto.objects.get(id_producto=producto_id)
+
+                # Crear el PedidoProducto asociado al pedido y al producto
+                PedidoProducto.objects.create(
+                    pedido=pedido,
+                    producto=producto,
+                    cantidad=cantidad,
+                    precio=producto.precio  # Asegúrate de ajustar según tu modelo Producto
+                )
+
+            return JsonResponse({'success': True})
+        except User_direccion.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Dirección no válida.'})
+        except Producto.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Producto no encontrado.'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+    return JsonResponse({'success': False, 'error': 'Método no permitido.'})
+
+
+def calcular_total_pedido(carrito):
+    total = 0
+    for item in carrito:
+        producto_id = item['producto_id']
+        cantidad = item['cantidad']
+        producto = Producto.objects.get(id_producto=producto_id)
+        total += producto.precio * cantidad
+    return total
+
 """ @login_required
 @user_passes_test(es_admin)
 def pedidos(request):
