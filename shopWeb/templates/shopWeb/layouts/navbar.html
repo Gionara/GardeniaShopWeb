@@ -119,7 +119,9 @@
                                     Producto</a></li>
                             <li><a class="dropdown-item" 
                                 href="{% url 'gestion_cupones' %}"> Gestionar Cupones </a></li>
-                            
+                            <li><a class="dropdown-item" 
+                                href="{% url 'admin_pedidos' %}"> Gestionar Pedidos </a></li>
+                                
                             <li><a class="dropdown-item"
                                     href="{% url 'logout' %}">Cerrar
                                     Sesión</a></li>
@@ -137,7 +139,7 @@
                             aria-labelledby="navbarDropdownMenuLink1">
                             <li><a class="dropdown-item"
                                     href="{% url 'profile' %}">Perfil</a></li>
-                            <li><a class="dropdown-item disabled" href="#">Mis
+                            <li><a class="dropdown-item" href="{% url 'lista_pedidos' %}">Mis
                                     Pedidos</a></li>
                             <li><a class="dropdown-item"
                                     href="{% url 'logout' %}">Cerrar

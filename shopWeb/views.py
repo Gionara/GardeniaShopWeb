@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.http import JsonResponse
@@ -32,6 +33,19 @@ protected_urls = [
     '/shopWeb/admin/cupones/editar/<int:id>',
     '/shopWeb/admin/cupones/eliminar/<int:id>',
     '/shopWeb/profile/carro_compras.html',
+    '/shopWeb/admin/pedidos.html',
+    '/shopWeb/admin/pedido_detalle.html',
+    '/shopWeb/admin/actualizar_estado_pedido.html',
+    '/shopWeb/admin/gestion_cupones.html',
+    '/shopWeb/admin/cupon_nuevo.html',
+    '/shopWeb/admin/cupon_editar.html',
+    '/shopWeb/admin/cupon_eliminar.html',
+    '/shopWeb/admin/producto_nuevo.html',
+    '/shopWeb/admin/producto_editar.html',
+    '/shopWeb/admin/producto_eliminar.html',
+    '/shopWeb/profile/profile.html',
+    '/shopWeb/profile/mis_compras.html',
+
 ]
 
 # Create your views here.
@@ -142,6 +156,23 @@ def profile(request):
     }
     
     return render(request, 'shopWeb/perfil_cliente/profile.html', context)
+
+# PERFIL - PEDIDOS REALIZADOS
+
+@login_required
+def lista_pedidos(request):
+    user = request.user
+    pedidos = Pedido.objects.filter(user=user).order_by('-fecha_pedido')
+    context = {
+        'pedidos': pedidos
+    }
+    return render(request, 'shopWeb/perfil_cliente/mis_compras.html', context)
+
+@login_required
+def pedido_detalle(request, id_pedido):
+    pedido = get_object_or_404(Pedido, id_pedido=id_pedido)
+    productos = PedidoProducto.objects.filter(pedido=pedido)
+    return render(request, 'shopWeb/perfil_cliente/pedido_detalle.html', {'pedido': pedido, 'productos': productos})
 
 # PERFIL - CRUD DIRECCIONES
 
@@ -295,7 +326,6 @@ def guardar_carrito(request):
             return JsonResponse({'success': False, 'error': str(e)})
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
-
 @csrf_exempt
 @require_POST
 def aplicar_cupon(request):
@@ -309,7 +339,6 @@ def aplicar_cupon(request):
         return JsonResponse({'success': True,'codigo': codigo, 'descuento': descuento})
     except Cupon.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Código de cupón inválido o inactivo'})
-
 
 def carro_compras(request):
     carrito_cookie = request.COOKIES.get('carrito', '[]')
@@ -353,24 +382,29 @@ def carro_compras(request):
 
     return render(request, 'shopWeb/perfil_cliente/carro_compras.html', context)
 
-
-
 @csrf_exempt
 @login_required
 @require_POST
 def procesar_pago(request):
     if request.method == 'POST':
+        print("ES POST")
+        
         try:
+            print("Cuerpo de la solicitud:", request.body)
             data = json.loads(request.body)
+            print("Datos decodificados:", data)
+            
             carrito = data.get('carrito', [])
             direccion_id = data.get('direccion_id')
-
+            print("Carrito:", carrito)
+            print("Dirección ID:", direccion_id)
+            
             if not direccion_id:
                 return JsonResponse({'error': True, 'message': 'Debe seleccionar una dirección de envío.'})
 
             try:
-                direccion = User_direccion.objects.get(id=direccion_id, user=request.user)
-            except ObjectDoesNotExist:
+                direccion = User_direccion.objects.get(id_direccion=direccion_id, user=request.user)
+            except User_direccion.DoesNotExist:
                 return JsonResponse({'error': True, 'message': 'La dirección seleccionada no existe para el usuario actual.'})
 
             cupon_codigo = data.get('cupon_codigo', '')
@@ -404,12 +438,22 @@ def procesar_pago(request):
 
                 # Vaciar el carrito en la sesión
                 request.session['carrito'] = []
-
+                print("Pedido procesado correctamente")
                 return JsonResponse({'error': False, 'message': 'Pedido procesado correctamente.', 'redirect_url': reverse('index')})
 
+        except json.JSONDecodeError:
+            print("Error al decodificar JSON en la solicitud")
+            return JsonResponse({'error': True, 'message': 'Error al decodificar JSON en la solicitud.'})
+
+        except KeyError as e:
+            print(f"Error de KeyError: {str(e)}")
+            return JsonResponse({'error': True, 'message': f'Falta clave en los datos: {str(e)}'})
+
         except Exception as e:
+            print(f"Error en procesar_pago: {str(e)}")
             return JsonResponse({'error': True, 'message': str(e)})
-    return JsonResponse({'error': True, 'message': 'Método no permitido.'})
+
+    return JsonResponse({'error': True, 'message': 'Método no permitido'}, status=405)
 
 #PRODUCTOS
 
@@ -553,7 +597,7 @@ def cupon_eliminar(request, id):
     return redirect('gestion_cupones')
 
 
-# CRUD DE PEDIDOS 
+# PEDIDOS 
 
 @csrf_exempt
 def guardar_pedido(request):
@@ -593,16 +637,21 @@ def guardar_pedido(request):
                     cantidad=cantidad,
                     precio=producto.precio  # Asegúrate de ajustar según tu modelo Producto
                 )
-
-            return JsonResponse({'success': True})
-        except User_direccion.DoesNotExist:
+            print("   1 pedido correcto")
+            return JsonResponse({'success': True, 'message': 'Pedido guardado correctamente'})
+           
+        except User_direccion.DoesNotExist: 
+            print("Error 2")
             return JsonResponse({'success': False, 'error': 'Dirección no válida.'})
         except Producto.DoesNotExist:
+            print("Error 3")
             return JsonResponse({'success': False, 'error': 'Producto no encontrado.'})
         except Exception as e:
-            return JsonResponse({'success': False, 'error': str(e)})
-
-    return JsonResponse({'success': False, 'error': 'Método no permitido.'})
+            print("Error 4")
+            return JsonResponse({'success': False, 'error as e ': str(e)})
+    
+    print("Error 4")
+    return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
 
 
 def calcular_total_pedido(carrito):
@@ -614,22 +663,26 @@ def calcular_total_pedido(carrito):
         total += producto.precio * cantidad
     return total
 
-""" @login_required
+@login_required
 @user_passes_test(es_admin)
-def pedidos(request):
-    return render(request, 'shopWeb/admin/pedidos.html')
+def admin_pedidos(request):
+    pedidos = Pedido.objects.all()
+    return render(request, 'shopWeb/admin/pedidos.html', {'pedidos': pedidos})
 
 @login_required
 @user_passes_test(es_admin)
-def pedido_nuevo(request):
-    return render(request, 'shopWeb/admin/pedido_nuevo.html')
+def admin_pedido_detalle(request, id_pedido):
+    pedido = get_object_or_404(Pedido, id_pedido=id_pedido)
+    productos = PedidoProducto.objects.filter(pedido=pedido)
+    return render(request, 'shopWeb/admin/pedido_detalle.html', {'pedido': pedido, 'productos': productos})
 
 @login_required
 @user_passes_test(es_admin)
-def pedido_editar(request):
-    return render(request, 'shopWeb/admin/pedido_editar.html')
-
-@login_required
-@user_passes_test(es_admin)
-def pedido_eliminar(request):
-    return render(request, 'shopWeb/admin/pedido_eliminar.html') """
+def admin_actualizar_estado_pedido(request, id_pedido):
+    pedido = get_object_or_404(Pedido, id_pedido=id_pedido)
+    if request.method == 'POST':
+        nuevo_estado = request.POST.get('estado')
+        pedido.estado = nuevo_estado
+        pedido.save()
+        return redirect('admin_pedido_detalle', id_pedido=id_pedido)
+    return render(request, 'shopWeb/admin/actualizar_estado_pedido.html', {'pedido': pedido})

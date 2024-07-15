@@ -182,7 +182,6 @@
             console.log("Dirección seleccionada ID:", direccionSeleccionada); // Verificar en consola el valor de direccionSeleccionada
         });
 
-
         $('#modalAgregarDireccion').on('shown.bs.modal', function () {
             $('#formAgregarDireccion')[0].reset();
         });
@@ -192,18 +191,20 @@
         });
 
         $('#sing-in-pago').on('click', function() {
-        $('#modalSignin').modal('show');
+            $('#modalSignin').modal('show');
         });
-         
+
         $('#confirmar-pago').on('click', function() {
             let carrito = JSON.parse(localStorage.getItem('carrito'));
             let direccionId = parseInt($('#direccion_id').val()); // Obtener el direccion_id del campo oculto
+            let cuponCodigo = $('#codigo-descuento').val(); // Obtener el código del cupón si existe
 
             if (!direccionId) {
                 alert("Por favor seleccione una dirección de envío.");
                 return;
             }
 
+            // Primera solicitud AJAX para guardar el pedido
             $.ajax({
                 type: 'POST',
                 url: '{% url "guardar_pedido" %}',  // Asegúrate de que esta URL sea la correcta
@@ -219,17 +220,48 @@
                 success: function(response) {
                     if (response.success) {
                         console.log('Pedido creado correctamente.');
+
+                        // Segunda solicitud AJAX para procesar el pago
+                        $.ajax({
+                            type: 'POST',
+                            url: '{% url "procesar_pago" %}',
+                            data: JSON.stringify({
+                                carrito: carrito,
+                                direccion_id: direccionId,
+                                cupon_codigo: cuponCodigo, // Añadir el código del cupón si existe
+                            }),
+                            contentType: 'application/json',
+                            headers: {
+                                'X-CSRFToken': getCookie('csrftoken')
+                            },
+                            success: function(response) {
+                                if (response.error) {
+                                    alert(response.message);
+                                } else {
+                                    alert(response.message);
+                                    // Redirigir a la página de inicio
+                                    localStorage.removeItem('carrito');
+                                    window.location.href = '{% url "index" %}';
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error en la solicitud AJAX al procesar el pago:', status, error);
+                                alert('Ha ocurrido un error al procesar el pago, por favor intente de nuevo.');
+                            }
+                        });
+
                         $('#modalConfirmarPago').modal('hide');
-                        // Redirigir a una página de éxito o actualizar el carrito
                     } else {
                         console.error('Error al crear el pedido:', response.error);
+                        alert('Error al crear el pedido: ' + response.error);
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.error('Error en la solicitud AJAX:', status, error);
+                    console.error('Error en la solicitud AJAX al guardar el pedido:', status, error);
+                    alert('Error en la solicitud AJAX al guardar el pedido: ' + error);
                 }
             });
-        });
+        });   
     });
 </script>
 

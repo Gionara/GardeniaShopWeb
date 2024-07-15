@@ -29,7 +29,10 @@ urlpatterns = [
     path('profile/direcciones/editar/<int:direccion_id>', views.editar_direccion, name='editar_direccion'),
     path('profile/direcciones/eliminar/<int:direccion_id>', views.eliminar_direccion, name='eliminar_direccion'),
 
+#  PEDIDOS REALIZADOS
 
+    path('profile/pedidos/', views.lista_pedidos, name='lista_pedidos'),
+    path('profile/pedidos/pedido_detalle/<int:id_pedido>/', views.pedido_detalle, name='pedido_detalle'),
 
 # INFO GARDENIA 
     path('politicas', views.politicas, name='politicas'),
@@ -62,6 +65,13 @@ urlpatterns = [
 # PEDIDO
     path('guardar_pedido/', views.guardar_pedido, name='guardar_pedido'),    
     path('calcular_total_pedido', views.calcular_total_pedido, name='calcular_total_pedido'),
+
+# PEDIDOS - ADMIN VIEWS    
+
+    path('admin/pedidos/', views.admin_pedidos, name='admin_pedidos'),
+    path('admin/pedidos/<int:id_pedido>/', views.admin_pedido_detalle, name='admin_pedido_detalle'),
+    path('admin/pedidos/<int:id_pedido>/actualizar_estado/', views.admin_actualizar_estado_pedido, name='admin_actualizar_estado_pedido'),
+
 ]
 
 

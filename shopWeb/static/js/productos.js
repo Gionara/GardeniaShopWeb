@@ -69,6 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+    
 
     function cargarCarrito() {
         const carritoGuardado = JSON.parse(localStorage.getItem('carrito'));

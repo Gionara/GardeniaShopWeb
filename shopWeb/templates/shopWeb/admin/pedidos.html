@@ -1,0 +1,38 @@
+{% extends 'shopWeb/layouts/base.html' %}
+{% load static %}
+
+{% block title %} 🌸Gardenia - Gestión  Pedidos 🌸 {% endblock %}
+
+{% block content %}
+<h1>Pedidos</h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Fecha</th>
+            <th>Dirección</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for pedido in pedidos %}
+            <tr>
+                <td>{{ pedido.id_pedido }}</td>
+                <td>{{ pedido.user}}</td> <!-- Suponiendo que tienes un campo de usuario en el modelo Pedido -->
+                <td>{{ pedido.fecha_pedido|date:"d-m-Y" }}</td>
+                <td>{{ pedido.direccion_envio.direccion }} , {{ pedido.direccion_envio.ciudad }}</td>
+                <td>{{ pedido.total_pagado }}</td>
+                <td>{{ pedido.estado_envio }}</td>
+                <td>
+                    
+                    <a href="{% url 'admin_pedido_detalle' pedido.id_pedido %}" class="btn btn-success">Ver Detalle</a>
+                    <a href="{% url 'admin_actualizar_estado_pedido' pedido.id_pedido %}" class="btn btn-warning">Cambiar Estado</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

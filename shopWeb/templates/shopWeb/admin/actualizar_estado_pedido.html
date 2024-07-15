@@ -1,0 +1,20 @@
+{% extends 'shopWeb/layouts/base.html' %}
+{% load static %}
+
+{% block title %} 🌸Gardenia - Estado  Pedidos 🌸 {% endblock %}
+
+{% block content %}
+<h1>Actualizar Estado del Pedido #{{ pedido.id_pedido }}</h1>
+<form method="post">
+    {% csrf_token %}
+    <label for="estado">Estado</label>
+    <select id="estado" name="estado">
+        <option value="Pendiente" {% if pedido.estado_envio == 'Pendiente' %}selected{% endif %}>Pendiente</option>
+        <option value="Procesado" {% if pedido.estado_envio == 'Procesado' %}selected{% endif %}>Procesado</option>
+        <option value="Enviado" {% if pedido.estado_envio == 'Enviado' %}selected{% endif %}>Enviado</option>
+        <option value="Entregado" {% if pedido.estado_envio == 'Entregado' %}selected{% endif %}>Entregado</option>
+        <option value="Cancelado" {% if pedido.estado_envio == 'Cancelado' %}selected{% endif %}>Cancelado</option>
+    </select>
+    <button type="submit">Actualizar</button>
+</form>
+{% endblock %}

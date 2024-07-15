@@ -1,0 +1,36 @@
+{% extends 'shopWeb/layouts/base.html' %}
+{% load static %}
+
+{% block title %} 🌸Gardenia - Detalle  Pedidos 🌸 {% endblock %}
+
+{% block content %}
+<h1>Detalle del Pedido #{{ pedido.id_pedido }}</h1>
+<p>Usuario: {{ pedido.user}}</p>
+<p>Fecha: {{ pedido.fecha_pedido }}</p>
+<p>Total: {{ pedido.total_pagado }}</p>
+<p>Estado: {{ pedido.estado_envio }}</p>
+
+<h2>Productos</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID Producto</th>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in productos %}
+        <tr>
+            <td>{{ item.producto.id_producto }}</td>
+            <td>{{ item.producto.nombre }}</td>
+            <td>{{ item.cantidad }}</td>
+            <td>{{ item.producto.precio }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'admin_actualizar_estado_pedido' pedido.id_pedido %}" class="btn btn-success">Actualizar Estado</a>
+{% endblock %}
